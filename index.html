@@ -138,7 +138,7 @@
 </div>
 
 <script>
-    // URL de tu Firebase
+    // URL DE TU BASE DE DATOS MODIFICADA
     const urlDatabase = "https://sandwich-clandestinos-default-rtdb.firebaseio.com/pedidos.json";
 
     const sandwiches = [
@@ -228,7 +228,6 @@
         btn.disabled = true;
         btn.innerText = "ENVIANDO...";
 
-        // Objeto para enviar a Firebase
         const pedidoAFirebase = {
             id: Date.now(),
             hora: new Date().toLocaleTimeString(),
@@ -237,13 +236,16 @@
         };
 
         try {
-            // ENVIAR A FIREBASE
+            // BLOQUE DE CONEXIÓN MODIFICADO SEGÚN TU SOLICITUD
             await fetch(urlDatabase, {
                 method: 'POST',
-                body: JSON.stringify(pedidoAFirebase)
+                body: JSON.stringify(pedidoAFirebase),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
 
-            // Mostrar el ticket en pantalla
+            // MOSTRAR TICKET
             const tkt = document.getElementById('ticket-items');
             tkt.innerHTML = "";
             let total = 0;
@@ -255,7 +257,7 @@
             document.getElementById('overlay-ticket').style.display = 'flex';
             
         } catch (error) {
-            alert("Error al enviar el pedido a cocina. Intenta de nuevo.");
+            alert("Error de conexión. Revisa que las reglas de Firebase estén en true.");
             btn.disabled = false;
             btn.innerText = "ENVIAR PEDIDO";
         }
