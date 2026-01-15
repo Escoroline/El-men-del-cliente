@@ -3,61 +3,265 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sandwich Clandestino</title>
+    <title>Sandwich Clandestino | Menú Gourmet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
-        header { background-color: #333; color: #fff; padding: 1rem 0; text-align: center; }
-        .container { width: 80%; margin: auto; overflow: hidden; }
-        #menu { display: flex; flex-wrap: wrap; justify-content: space-around; margin-top: 2rem; }
-        .menu-item { background: #fff; border: #ccc 1px solid; padding: 1rem; margin-bottom: 1rem; width: 30%; box-shadow: 0 0 10px rgba(0,0,0,0.1); text-align: center; }
-        .menu-item h3 { margin: 0; }
-        .menu-item p { color: #777; }
-        .menu-item button { background: #333; color: #fff; border: 0; padding: 0.5rem 1rem; cursor: pointer; margin-top: 0.5rem; }
-        .menu-item button:hover { background: #555; }
+        :root { --naranja: #ff8c00; --naranja-brillo: #ffae42; --negro: #080808; --gris: #121212; --blanco: #ffffff; }
+        
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            background-color: var(--negro); 
+            background-image: 
+                linear-gradient(rgba(8, 8, 8, 0.95), rgba(8, 8, 8, 0.95)),
+                url('https://www.transparenttextures.com/patterns/carbon-fibre.png'),
+                url('https://cdn-icons-png.flaticon.com/512/5787/5787100.png');
+            background-repeat: repeat;
+            background-size: auto, auto, 150px;
+            background-attachment: fixed;
+            color: var(--blanco); 
+            margin: 0; 
+        }
+
+        header { 
+            height: 35vh; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            border-bottom: 3px solid var(--naranja);
+        }
+
+        h1 { font-family: 'Playfair Display', serif; font-size: 3.5rem; color: var(--naranja); margin: 0; font-style: italic; }
+        .sub { letter-spacing: 8px; font-weight: 300; font-size: 0.8rem; color: #aaa; text-transform: uppercase;}
+
+        .container { max-width: 1200px; margin: auto; padding: 30px 20px; }
+        
+        .seccion-titulo { 
+            font-family: 'Playfair Display', serif; 
+            color: var(--naranja); 
+            font-size: 2rem; 
+            border-bottom: 1px solid #333; 
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+        }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        
+        .card { 
+            background: rgba(20, 20, 20, 0.8); 
+            backdrop-filter: blur(5px);
+            border-radius: 20px; 
+            padding: 25px; 
+            text-align: center; 
+            border: 1px solid #222; 
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .card:hover { border-color: var(--naranja); transform: translateY(-5px); }
+        .card i { font-size: 3rem; color: var(--naranja); margin-bottom: 15px; }
+        .card h3 { margin: 10px 0; font-size: 1.2rem; }
+
+        /* Panel Detalle */
+        #vista-detalle { display: none; max-width: 700px; margin: 40px auto; padding: 20px; animation: fadeIn 0.4s; }
+        @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+
+        .config-panel { background: var(--gris); padding: 30px; border-radius: 25px; border: 1px solid #333; }
+        .opcion-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #222; }
+        
+        .instrucciones { 
+            width: 100%; background: #000; border: 1px solid #333; color: white; 
+            padding: 12px; border-radius: 10px; margin-top: 15px; resize: none; font-family: inherit;
+        }
+
+        .btn-clandestino {
+            background: var(--naranja); color: black; border: none; padding: 15px; 
+            border-radius: 10px; font-weight: 700; width: 100%; cursor: pointer; 
+            margin-top: 20px; transition: 0.3s;
+        }
+
+        /* Footer Carrito */
+        .footer-cart { 
+            position: fixed; bottom: 0; width: 100%; background: var(--naranja); 
+            color: black; padding: 15px; display: none; justify-content: space-around; 
+            font-weight: bold; align-items: center; z-index: 1000;
+        }
+
+        /* Ticket */
+        .overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; align-items:center; justify-content:center; }
+        .ticket { background:#fff; color:#000; padding:30px; width:320px; font-family:'Courier New', monospace; text-transform: uppercase; }
     </style>
 </head>
 <body>
+
+<div id="vista-menu">
     <header>
-        <h1>Sandwich Clandestino</h1>
+        <h1>Clandestino</h1>
+        <p class="sub">Gourmet & Misterio</p>
     </header>
+
     <div class="container">
-        <div id="menu">
-            <div class="menu-item">
-                <h3>Sandwich de Jamón</h3>
-                <p>Delicioso sandwich de jamón con queso y lechuga.</p>
-                <button onclick="enviarPedido('Sandwich de Jamón')">Pedir ahora</button>
-            </div>
-            <div class="menu-item">
-                <h3>Sandwich de Pollo</h3>
-                <p>Sandwich de pollo a la plancha con aguacate.</p>
-                <button onclick="enviarPedido('Sandwich de Pollo')">Pedir ahora</button>
-            </div>
-            <div class="menu-item">
-                <h3>Sandwich Vegetariano</h3>
-                <p>Mezcla de vegetales frescos con hummus.</p>
-                <button onclick="enviarPedido('Sandwich Vegetariano')">Pedir ahora</button>
-            </div>
-        </div>
+        <h2 class="seccion-titulo">Sándwiches de Autor</h2>
+        <div class="grid" id="menu-sandwiches"></div>
+
+        <h2 class="seccion-titulo">Bebidas Frías</h2>
+        <div class="grid" id="menu-bebidas"></div>
     </div>
+</div>
 
-    <script>
-        function enviarPedido(nombreSandwich) {
-            const urlDatabase = "https://sandwich-clandestinos-default-rtdb.firebaseio.com/pedidos.json";
-            const pedido = {
-                nombre: nombreSandwich,
-                fecha: new Date().toLocaleString()
-            };
+<div id="vista-detalle">
+    <div class="config-panel">
+        <center>
+            <i id="det-icono" style="font-size: 4rem; color: var(--naranja);"></i>
+            <h2 id="det-titulo" style="font-family: 'Playfair Display'; font-size: 2.5rem;"></h2>
+        </center>
+        <div id="cont-transformacion"></div>
+        <h4>NOTAS PARA EL CHEF</h4>
+        <textarea id="notas-pedido" class="instrucciones" placeholder="Ej: Pan muy tostado..."></textarea>
+        <div id="precio-final" style="font-size: 2rem; text-align: center; margin-top: 20px; color: var(--naranja);">$0</div>
+        <button class="btn-clandestino" onclick="añadirOrden()">AÑADIR A LA ORDEN</button>
+        <button onclick="cerrarDetalle()" style="background:none; border:none; color:#666; width:100%; margin-top:10px; cursor:pointer;">Regresar</button>
+    </div>
+</div>
 
-            fetch(urlDatabase, {
-                method: 'POST',
-                body: JSON.stringify(pedido),
-                headers: { 'Content-Type': 'application/json' }
-            })
-            .then(res => {
-                if(res.ok) alert('Pedido de ' + nombreSandwich + ' enviado con éxito.');
-            })
-            .catch(err => alert('Error al enviar el pedido.'));
+<div id="footer-bar" class="footer-cart">
+    <span>CARRITO: <span id="total-final">$0</span></span>
+    <button id="btnEnviar" onclick="finalizarTodo()" style="background:black; color:white; border:none; padding:8px 15px; border-radius:5px; cursor:pointer;">ENVIAR PEDIDO</button>
+</div>
+
+<div id="overlay-ticket" class="overlay">
+    <div class="ticket">
+        <center><h3>CLANDESTINO</h3><p>RECIBO DE COMPRA</p></center>
+        <hr style="border: 1px dashed #000">
+        <div id="ticket-items"></div>
+        <hr style="border: 1px dashed #000">
+        <p>TOTAL: <span id="ticket-total"></span></p>
+        <button class="btn-clandestino" onclick="location.reload()">FINALIZAR</button>
+    </div>
+</div>
+
+<script>
+    // URL de tu Firebase
+    const urlDatabase = "https://sandwich-clandestinos-default-rtdb.firebaseio.com/pedidos.json";
+
+    const sandwiches = [
+        { id: 1, nombre: "Tradicional", icono: "fa-solid fa-bread-slice", precio: 4000 },
+        { id: 2, nombre: "Pollo Broaster", icono: "fa-solid fa-drumstick-bite", precio: 5000 },
+        { id: 3, nombre: "Sándwich Burger", icono: "fa-solid fa-burger", precio: 7000 },
+        { id: 4, nombre: "El Subterráneo", icono: "fa-solid fa-khanda", precio: 8500 }
+    ];
+
+    const bebidas = [
+        { id: 101, nombre: "Pepsi Personal", precio: 2500, icono: "fa-solid fa-bottle-droplet" },
+        { id: 102, nombre: "Manzana Personal", precio: 2500, icono: "fa-solid fa-bottle-droplet" },
+        { id: 103, nombre: "Coca-Cola 1.5L", precio: 6000, icono: "fa-solid fa-bottle-water" },
+        { id: 104, nombre: "Gaseosa Jip", precio: 2000, icono: "fa-solid fa-bottle-droplet" }
+    ];
+
+    const adicionales = ["Queso Extra", "Tocino", "Huevo", "Aguacate"];
+    let carrito = [];
+    let actual = null;
+
+    function init() {
+        const sBox = document.getElementById('menu-sandwiches');
+        sandwiches.forEach(s => {
+            sBox.innerHTML += `<div class="card" onclick="abrirSándwich(${s.id})"><i class="${s.icono}"></i><h3>${s.nombre}</h3><span style="color:var(--naranja)">$${s.precio.toLocaleString()}</span></div>`;
+        });
+
+        const bBox = document.getElementById('menu-bebidas');
+        bebidas.forEach(b => {
+            bBox.innerHTML += `<div class="card" onclick="añadirBebida(${b.id})"><i class="${b.icono}"></i><h3>${b.nombre}</h3><span style="color:var(--naranja)">$${b.precio.toLocaleString()}</span></div>`;
+        });
+    }
+
+    function abrirSándwich(id) {
+        actual = sandwiches.find(s => s.id === id);
+        document.getElementById('det-icono').className = actual.icono;
+        document.getElementById('det-titulo').innerText = actual.nombre;
+        const trans = document.getElementById('cont-transformacion');
+        trans.innerHTML = "<h4>Adicionales (+$500)</h4>";
+        adicionales.forEach(ing => {
+            trans.innerHTML += `<div class="opcion-row">${ing} <input type="checkbox" class="ing-check" value="${ing}" onchange="calc()"></div>`;
+        });
+        document.getElementById('vista-menu').style.display = 'none';
+        document.getElementById('vista-detalle').style.display = 'block';
+        calc();
+    }
+
+    function añadirBebida(id) {
+        const b = bebidas.find(x => x.id === id);
+        carrito.push({ nombre: b.nombre, total: b.precio, detalles: "Bebida", nota: "" });
+        actualizarFooter();
+    }
+
+    function calc() {
+        let extras = document.querySelectorAll('.ing-check:checked').length;
+        document.getElementById('precio-final').innerText = "$" + (actual.precio + (extras * 500)).toLocaleString();
+    }
+
+    function añadirOrden() {
+        let mods = Array.from(document.querySelectorAll('.ing-check:checked')).map(c => c.value);
+        let nota = document.getElementById('notas-pedido').value;
+        carrito.push({
+            nombre: actual.nombre,
+            total: actual.precio + (mods.length * 500),
+            detalles: mods.join(", ") || "Normal",
+            nota: nota
+        });
+        cerrarDetalle();
+        actualizarFooter();
+    }
+
+    function cerrarDetalle() {
+        document.getElementById('vista-menu').style.display = 'block';
+        document.getElementById('vista-detalle').style.display = 'none';
+        document.getElementById('notas-pedido').value = "";
+    }
+
+    function actualizarFooter() {
+        if(carrito.length > 0) {
+            document.getElementById('footer-bar').style.display = 'flex';
+            let total = carrito.reduce((s,i) => s + i.total, 0);
+            document.getElementById('total-final').innerText = "$" + total.toLocaleString();
         }
-    </script>
+    }
+
+    async function finalizarTodo() {
+        const btn = document.getElementById('btnEnviar');
+        btn.disabled = true;
+        btn.innerText = "ENVIANDO...";
+
+        // Objeto para enviar a Firebase
+        const pedidoAFirebase = {
+            id: Date.now(),
+            hora: new Date().toLocaleTimeString(),
+            items: carrito,
+            total: carrito.reduce((s,i) => s + i.total, 0)
+        };
+
+        try {
+            // ENVIAR A FIREBASE
+            await fetch(urlDatabase, {
+                method: 'POST',
+                body: JSON.stringify(pedidoAFirebase)
+            });
+
+            // Mostrar el ticket en pantalla
+            const tkt = document.getElementById('ticket-items');
+            tkt.innerHTML = "";
+            let total = 0;
+            carrito.forEach(i => {
+                tkt.innerHTML += `<p>${i.nombre} - $${i.total.toLocaleString()}<br><small>${i.detalles}</small></p>`;
+                total += i.total;
+            });
+            document.getElementById('ticket-total').innerText = "$" + total.toLocaleString();
+            document.getElementById('overlay-ticket').style.display = 'flex';
+            
+        } catch (error) {
+            alert("Error al enviar el pedido a cocina. Intenta de nuevo.");
+            btn.disabled = false;
+            btn.innerText = "ENVIAR PEDIDO";
+        }
+    }
+
+    init();
+</script>
 </body>
 </html>
