@@ -2,15 +2,17 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>COCINA | Sandwich Clandestino</title>
+    <title>Panel de Cocina | Clandestino</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { background: #080808; color: #ff8c00; font-family: 'Courier New', monospace; padding: 20px; }
-        h1 { border-bottom: 2px solid #ff8c00; text-align: center; padding-bottom: 10px; }
-        .pedido-card { border: 1px solid #333; background: #121212; padding: 20px; margin-bottom: 20px; border-radius: 10px; }
-        .item-line { color: #fff; margin: 5px 0; border-bottom: 1px solid #222; padding-bottom: 5px; }
-        .nota { color: #aaa; font-style: italic; font-size: 0.9em; }
-        .btn-listo { background: #ff8c00; color: black; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; border-radius: 5px; margin-top: 15px; width: 100%; }
-        .btn-listo:hover { background: #ffae42; }
+        body { background-color: #000; color: #ff8c00; font-family: 'Courier Prime', monospace; margin: 0; padding: 20px; }
+        h1 { text-align: center; border-bottom: 2px solid #ff8c00; padding-bottom: 10px; text-transform: uppercase; }
+        #contenedor-pedidos { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
+        .ticket-cocina { border: 2px solid #ff8c00; padding: 15px; background: #080808; position: relative; }
+        .hora { color: #fff; font-size: 0.8rem; }
+        .item-lista { color: #fff; margin: 10px 0; border-left: 3px solid #ff8c00; padding-left: 10px; }
+        .btn-listo { background: #ff8c00; color: #000; border: none; padding: 10px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-listo:hover { background: #fff; }
     </style>
 </head>
 <body>
@@ -18,57 +20,57 @@
     <div id="contenedor-pedidos">Cargando pedidos...</div>
 
     <script>
-        const urlDatabase = "https://sandwich-clandestinos-default-rtdb.firebaseio.com/pedidos.json";
+        const urlFirebase = "https://sandwich-clandestinos-default-rtdb.firebaseio.com/pedidos.json";
 
         async function cargarPedidos() {
             try {
-                const res = await fetch(urlDatabase);
-                const datos = await res.json();
-                const container = document.getElementById('contenedor-pedidos');
-                container.innerHTML = "";
+                const respuesta = await fetch(urlFirebase);
+                const datos = await respuesta.json();
+                const contenedor = document.getElementById('contenedor-pedidos');
+                contenedor.innerHTML = "";
 
-                if(!datos) {
-                    container.innerHTML = "<p style='text-align:center; color:#666;'>Esperando pedidos nuevos...</p>";
+                if (!datos) {
+                    contenedor.innerHTML = "<h3>NO HAY PEDIDOS PENDIENTES</h3>";
                     return;
                 }
 
                 Object.keys(datos).forEach(id => {
                     const pedido = datos[id];
                     let itemsHTML = "";
-                    pedido.items.forEach(it => {
-                        itemsHTML += `
-                            <div class="item-line">
-                                <strong>• ${it.nombre}</strong><br>
-                                <small>Extras: ${it.detalles}</small><br>
-                                <span class="nota">${it.nota ? 'Nota: ' + it.nota : ''}</span>
-                            </div>`;
+                    pedido.items.forEach(i => {
+                        itemsHTML += `<div class="item-lista">
+                            <strong>${i.nombre}</strong><br>
+                            <small>Extras: ${i.detalles}</small><br>
+                            <small>Nota: ${i.nota || 'Sin notas'}</small>
+                        </div>`;
                     });
 
-                    container.innerHTML += `
-                        <div class="pedido-card">
-                            <div style="display:flex; justify-content:space-between">
-                                <span>ORDEN #${pedido.id.toString().slice(-4)}</span>
-                                <span>${pedido.hora}</span>
-                            </div>
-                            <hr style="border:0; border-top:1px solid #333">
+                    contenedor.innerHTML += `
+                        <div class="ticket-cocina">
+                            <span class="hora">HORA: ${pedido.hora}</span>
+                            <hr style="border:0; border-top:1px dashed #ff8c00">
                             ${itemsHTML}
-                            <button class="btn-listo" onclick="completar('${id}')">MARCAR COMO ENTREGADO</button>
+                            <button class="btn-listo" onclick="completarPedido('${id}')">MARCAR COMO ENTREGADO</button>
                         </div>
                     `;
                 });
-            } catch (e) { console.error(e); }
+            } catch (error) {
+                console.error("Error al cargar:", error);
+            }
         }
 
-        async function completar(id) {
-            if(confirm("¿Pedido listo? Se borrará de la pantalla.")) {
-                await fetch(`https://sandwich-clandestinos-default-rtdb.firebaseio.com/pedidos/${id}.json`, { method: 'DELETE' });
+        async function completarPedido(id) {
+            if(confirm("¿Pedido entregado? Se borrará de la pantalla.")) {
+                await fetch(`https://sandwich-clandestinos-default-rtdb.firebaseio.com/pedidos/${id}.json`, {
+                    method: 'DELETE'
+                });
                 cargarPedidos();
             }
         }
 
+        // Refrescar cada 5 segundos
         setInterval(cargarPedidos, 5000);
         cargarPedidos();
     </script>
 </body>
 </html>
-/cocina.html
