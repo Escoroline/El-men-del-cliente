@@ -13,71 +13,28 @@
 </head>
 <body>
     <h1>Sándwich Clandestino 🥪</h1>
-    <p>Haz tu pedido aquí:</p>
-
     <div class="producto">
         <h3>Sándwich Clásico</h3>
-        <p>Precio: $10.00</p>
-        <button onclick="agregarAlPedido('Sándwich Clásico', 10)">Agregar</button>
+        <button onclick="enviarACocina('Sándwich Clásico')">Pedir Ahora</button>
     </div>
-
     <div class="producto">
         <h3>Sándwich Especial</h3>
-        <p>Precio: $15.00</p>
-        <button onclick="agregarAlPedido('Sándwich Especial', 15)">Agregar</button>
-    </div>
-
-    <div id="carrito">
-        <h3>Tu Pedido:</h3>
-        <ul id="lista-pedido" style="list-style: none; padding: 0;"></ul>
-        <button id="btnEnviar" onclick="enviarACocina()" style="display:none; background: #28a745; color: white;">ENVIAR PEDIDO A COCINA</button>
+        <button onclick="enviarACocina('Sándwich Especial')">Pedir Ahora</button>
     </div>
 
     <script>
-        let pedidoActual = [];
         const urlDatabase = "https://sandwich-clandestinos-default-rtdb.firebaseio.com/pedidos.json";
 
-        function agregarAlPedido(nombre, precio) {
-            pedidoActual.push(nombre);
-            actualizarInterfaz();
-        }
-
-        function actualizarInterfaz() {
-            const lista = document.getElementById('lista-pedido');
-            lista.innerHTML = "";
-            pedidoActual.forEach(item => {
-                const li = document.createElement('li');
-                li.textContent = item;
-                lista.appendChild(li);
-            });
-            document.getElementById('btnEnviar').style.display = pedidoActual.length > 0 ? 'inline-block' : 'none';
-        }
-
-        async function enviarACocina() {
-            const btn = document.getElementById('btnEnviar');
-            btn.disabled = true;
-            btn.textContent = "Enviando...";
-
+        async function enviarACocina(nombre) {
             const nuevoPedido = {
-                items: pedidoActual,
+                item: nombre,
                 hora: new Date().toLocaleTimeString(),
                 estado: "pendiente"
             };
-
             try {
-                await fetch(urlDatabase, {
-                    method: 'POST',
-                    body: JSON.stringify(nuevoPedido)
-                });
-                alert("¡Pedido enviado con éxito!");
-                pedidoActual = [];
-                actualizarInterfaz();
-            } catch (error) {
-                alert("Error al enviar pedido");
-            } finally {
-                btn.disabled = false;
-                btn.textContent = "ENVIAR PEDIDO A COCINA";
-            }
+                await fetch(urlDatabase, { method: 'POST', body: JSON.stringify(nuevoPedido) });
+                alert("¡Pedido enviado!");
+            } catch (e) { alert("Error al conectar"); }
         }
     </script>
 </body>
