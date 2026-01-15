@@ -3,38 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sándwich Clandestino - Menú</title>
+    <title>Sandwich Clandestino</title>
     <style>
-        body { font-family: sans-serif; background: #1a1a1a; color: white; text-align: center; padding: 20px; }
-        .producto { background: #333; margin: 10px auto; padding: 15px; border-radius: 10px; max-width: 400px; border-left: 5px solid #ffcc00; }
-        button { background: #ffcc00; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; border-radius: 5px; margin-top: 10px; }
-        #carrito { margin-top: 30px; border-top: 1px solid #555; padding-top: 20px; }
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+        header { background-color: #333; color: #fff; padding: 1rem 0; text-align: center; }
+        .container { width: 80%; margin: auto; overflow: hidden; }
+        #menu { display: flex; flex-wrap: wrap; justify-content: space-around; margin-top: 2rem; }
+        .menu-item { background: #fff; border: #ccc 1px solid; padding: 1rem; margin-bottom: 1rem; width: 30%; box-shadow: 0 0 10px rgba(0,0,0,0.1); text-align: center; }
+        .menu-item h3 { margin: 0; }
+        .menu-item p { color: #777; }
+        .menu-item button { background: #333; color: #fff; border: 0; padding: 0.5rem 1rem; cursor: pointer; margin-top: 0.5rem; }
+        .menu-item button:hover { background: #555; }
     </style>
 </head>
 <body>
-    <h1>Sándwich Clandestino 🥪</h1>
-    <div class="producto">
-        <h3>Sándwich Clásico</h3>
-        <button onclick="enviarACocina('Sándwich Clásico')">Pedir Ahora</button>
-    </div>
-    <div class="producto">
-        <h3>Sándwich Especial</h3>
-        <button onclick="enviarACocina('Sándwich Especial')">Pedir Ahora</button>
+    <header>
+        <h1>Sandwich Clandestino</h1>
+    </header>
+    <div class="container">
+        <div id="menu">
+            <div class="menu-item">
+                <h3>Sandwich de Jamón</h3>
+                <p>Delicioso sandwich de jamón con queso y lechuga.</p>
+                <button onclick="enviarPedido('Sandwich de Jamón')">Pedir ahora</button>
+            </div>
+            <div class="menu-item">
+                <h3>Sandwich de Pollo</h3>
+                <p>Sandwich de pollo a la plancha con aguacate.</p>
+                <button onclick="enviarPedido('Sandwich de Pollo')">Pedir ahora</button>
+            </div>
+            <div class="menu-item">
+                <h3>Sandwich Vegetariano</h3>
+                <p>Mezcla de vegetales frescos con hummus.</p>
+                <button onclick="enviarPedido('Sandwich Vegetariano')">Pedir ahora</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        const urlDatabase = "https://sandwich-clandestinos-default-rtdb.firebaseio.com/pedidos.json";
-
-        async function enviarACocina(nombre) {
-            const nuevoPedido = {
-                item: nombre,
-                hora: new Date().toLocaleTimeString(),
-                estado: "pendiente"
+        function enviarPedido(nombreSandwich) {
+            const urlDatabase = "https://sandwich-clandestinos-default-rtdb.firebaseio.com/pedidos.json";
+            const pedido = {
+                nombre: nombreSandwich,
+                fecha: new Date().toLocaleString()
             };
-            try {
-                await fetch(urlDatabase, { method: 'POST', body: JSON.stringify(nuevoPedido) });
-                alert("¡Pedido enviado!");
-            } catch (e) { alert("Error al conectar"); }
+
+            fetch(urlDatabase, {
+                method: 'POST',
+                body: JSON.stringify(pedido),
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(res => {
+                if(res.ok) alert('Pedido de ' + nombreSandwich + ' enviado con éxito.');
+            })
+            .catch(err => alert('Error al enviar el pedido.'));
         }
     </script>
 </body>
