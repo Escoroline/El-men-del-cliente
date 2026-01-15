@@ -2,74 +2,72 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard Cocina | Clandestino</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>COCINA | Sandwich Clandestino</title>
     <style>
-        body { 
-            background: #050505; color: #ff8c00; font-family: 'Montserrat', sans-serif; 
-            background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
-            padding: 20px; 
-        }
-        .header-cocina { text-align: center; border-bottom: 2px solid #ff8c00; margin-bottom: 30px; padding: 10px; }
-        .grid-cocina { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .order-card { 
-            background: #111; border-radius: 15px; padding: 20px; border: 1px solid #333; 
-            position: relative; overflow: hidden; animation: slideIn 0.3s;
-        }
-        @keyframes slideIn { from {transform: scale(0.8); opacity: 0;} to {transform: scale(1); opacity: 1;} }
-        .btn-listo { background: #ff8c00; color: #000; border: none; padding: 10px; width: 100%; font-weight: bold; cursor: pointer; border-radius: 5px; margin-top: 15px; }
-        
-        .run-icon { position: absolute; font-size: 4rem; right: -100px; bottom: 20px; opacity: 0; transition: 0.7s cubic-bezier(.47,0,.74,.71); }
-        .animar { transform: translateX(-1200px) rotate(-360deg); opacity: 1; }
+        body { background: #080808; color: #ff8c00; font-family: 'Courier New', monospace; padding: 20px; }
+        h1 { border-bottom: 2px solid #ff8c00; text-align: center; padding-bottom: 10px; }
+        .pedido-card { border: 1px solid #333; background: #121212; padding: 20px; margin-bottom: 20px; border-radius: 10px; }
+        .item-line { color: #fff; margin: 5px 0; border-bottom: 1px solid #222; padding-bottom: 5px; }
+        .nota { color: #aaa; font-style: italic; font-size: 0.9em; }
+        .btn-listo { background: #ff8c00; color: black; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; border-radius: 5px; margin-top: 15px; width: 100%; }
+        .btn-listo:hover { background: #ffae42; }
     </style>
 </head>
 <body>
-    <div class="header-cocina">
-        <h1>🕵️ COMANDAS EN CURSO</h1>
-    </div>
-    <div id="tablero" class="grid-cocina"></div>
+    <h1>📟 PEDIDOS RECIBIDOS</h1>
+    <div id="contenedor-pedidos">Cargando pedidos...</div>
 
     <script>
-        function render() {
-            const pedidos = JSON.parse(localStorage.getItem('pedidos_cocina')) || [];
-            const tablero = document.getElementById('tablero');
-            tablero.innerHTML = pedidos.length === 0 ? "<center><h2 style='color:#333'>SIN PEDIDOS</h2></center>" : "";
+        const urlDatabase = "https://sandwich-clandestinos-default-rtdb.firebaseio.com/pedidos.json";
 
-            pedidos.forEach(p => {
-                let itemsHtml = p.items.map(i => `
-                    <li style="margin-bottom:10px">
-                        <strong>${i.nombre}</strong><br>
-                        <small style="color:#aaa">${i.detalles}</small><br>
-                        <i style="color:#fff; font-size:0.8rem">${i.nota ? 'OBS: ' + i.nota : ''}</i>
-                    </li>`).join("");
-                
-                tablero.innerHTML += `
-                    <div class="order-card" id="card-${p.id}">
-                        <i class="fa-solid fa-bread-slice run-icon" id="icon-${p.id}"></i>
-                        <h3 style="color:#fff">MESA #${p.id.toString().slice(-4)}</h3>
-                        <ul style="list-style:none; padding:0">${itemsHtml}</ul>
-                        <button class="btn-listo" onclick="despachar(${p.id})">DESPACHAR AHORA</button>
-                    </div>
-                `;
-            });
+        async function cargarPedidos() {
+            try {
+                const res = await fetch(urlDatabase);
+                const datos = await res.json();
+                const container = document.getElementById('contenedor-pedidos');
+                container.innerHTML = "";
+
+                if(!datos) {
+                    container.innerHTML = "<p style='text-align:center; color:#666;'>Esperando pedidos nuevos...</p>";
+                    return;
+                }
+
+                Object.keys(datos).forEach(id => {
+                    const pedido = datos[id];
+                    let itemsHTML = "";
+                    pedido.items.forEach(it => {
+                        itemsHTML += `
+                            <div class="item-line">
+                                <strong>• ${it.nombre}</strong><br>
+                                <small>Extras: ${it.detalles}</small><br>
+                                <span class="nota">${it.nota ? 'Nota: ' + it.nota : ''}</span>
+                            </div>`;
+                    });
+
+                    container.innerHTML += `
+                        <div class="pedido-card">
+                            <div style="display:flex; justify-content:space-between">
+                                <span>ORDEN #${pedido.id.toString().slice(-4)}</span>
+                                <span>${pedido.hora}</span>
+                            </div>
+                            <hr style="border:0; border-top:1px solid #333">
+                            ${itemsHTML}
+                            <button class="btn-listo" onclick="completar('${id}')">MARCAR COMO ENTREGADO</button>
+                        </div>
+                    `;
+                });
+            } catch (e) { console.error(e); }
         }
 
-        function despachar(id) {
-            const icon = document.getElementById(`icon-${id}`);
-            const card = document.getElementById(`card-${id}`);
-            icon.classList.add('animar');
-            setTimeout(() => card.style.opacity = "0", 300);
-            setTimeout(() => {
-                let pedidos = JSON.parse(localStorage.getItem('pedidos_cocina'));
-                pedidos = pedidos.filter(p => p.id !== id);
-                localStorage.setItem('pedidos_cocina', JSON.stringify(pedidos));
-                render();
-            }, 750);
+        async function completar(id) {
+            if(confirm("¿Pedido listo? Se borrará de la pantalla.")) {
+                await fetch(`https://sandwich-clandestinos-default-rtdb.firebaseio.com/pedidos/${id}.json`, { method: 'DELETE' });
+                cargarPedidos();
+            }
         }
 
-        window.addEventListener('storage', render);
-        render();
+        setInterval(cargarPedidos, 5000);
+        cargarPedidos();
     </script>
 </body>
 </html>
