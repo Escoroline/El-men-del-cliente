@@ -3,90 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sandwich Clandestino | Menú Gourmet</title>
+    <title>Sandwich Clandestino | Personalizado</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --naranja: #ff8c00; --naranja-brillo: #ffae42; --negro: #080808; --gris: #121212; --blanco: #ffffff; }
-        
-        body { 
-            font-family: 'Montserrat', sans-serif; 
-            background-color: var(--negro); 
-            background-image: 
-                linear-gradient(rgba(8, 8, 8, 0.95), rgba(8, 8, 8, 0.95)),
-                url('https://www.transparenttextures.com/patterns/carbon-fibre.png'),
-                url('https://cdn-icons-png.flaticon.com/512/5787/5787100.png');
-            background-repeat: repeat;
-            background-size: auto, auto, 150px;
-            background-attachment: fixed;
-            color: var(--blanco); 
-            margin: 0; 
-        }
-
-        header { 
-            height: 35vh; 
-            display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            border-bottom: 3px solid var(--naranja);
-        }
-
+        :root { --naranja: #ff8c00; --negro: #080808; --gris: #121212; --blanco: #ffffff; }
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--negro); color: var(--blanco); margin: 0; }
+        header { height: 35vh; display: flex; flex-direction: column; justify-content: center; align-items: center; border-bottom: 3px solid var(--naranja); text-align: center; }
         h1 { font-family: 'Playfair Display', serif; font-size: 3.5rem; color: var(--naranja); margin: 0; font-style: italic; }
-        .sub { letter-spacing: 8px; font-weight: 300; font-size: 0.8rem; color: #aaa; text-transform: uppercase;}
-
+        
+        .horario-aviso { background: #1a1a1a; border: 1px solid var(--naranja); padding: 10px; margin: 20px; border-radius: 10px; text-align: center; font-size: 0.9rem; }
         .container { max-width: 1200px; margin: auto; padding: 30px 20px; }
+        .seccion-titulo { font-family: 'Playfair Display', serif; color: var(--naranja); font-size: 2rem; border-bottom: 1px solid #333; margin: 40px 0 20px; padding-bottom: 10px; }
         
-        .seccion-titulo { 
-            font-family: 'Playfair Display', serif; 
-            color: var(--naranja); 
-            font-size: 2rem; 
-            border-bottom: 1px solid #333; 
-            margin: 40px 0 20px;
-            padding-bottom: 10px;
-        }
-
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        
-        .card { 
-            background: rgba(20, 20, 20, 0.8); 
-            backdrop-filter: blur(5px);
-            border-radius: 20px; 
-            padding: 25px; 
-            text-align: center; 
-            border: 1px solid #222; 
-            transition: 0.3s;
-            cursor: pointer;
-        }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: rgba(20, 20, 20, 0.8); border-radius: 20px; padding: 25px; text-align: center; border: 1px solid #222; transition: 0.3s; cursor: pointer; }
         .card:hover { border-color: var(--naranja); transform: translateY(-5px); }
-        .card i { font-size: 3rem; color: var(--naranja); margin-bottom: 15px; }
-        .card h3 { margin: 10px 0; font-size: 1.2rem; }
+        .card i { font-size: 2.5rem; color: var(--naranja); }
+        .card p { font-size: 0.85rem; color: #ccc; min-height: 40px; }
 
-        /* Panel Detalle */
-        #vista-detalle { display: none; max-width: 700px; margin: 40px auto; padding: 20px; animation: fadeIn 0.4s; }
-        @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
-
+        #vista-detalle { display: none; max-width: 700px; margin: 40px auto; padding: 20px; }
         .config-panel { background: var(--gris); padding: 30px; border-radius: 25px; border: 1px solid #333; }
-        .opcion-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #222; }
         
-        .instrucciones { 
-            width: 100%; background: #000; border: 1px solid #333; color: white; 
-            padding: 12px; border-radius: 10px; margin-top: 15px; resize: none; font-family: inherit;
-        }
+        .opcion-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #222; align-items: center; }
+        .tag-quitar { color: #ff4444; font-size: 0.8rem; font-weight: bold; margin-top: 20px;}
+        .tag-extra { color: #44ff44; font-size: 0.8rem; font-weight: bold; margin-top: 20px;}
 
-        .btn-clandestino {
-            background: var(--naranja); color: black; border: none; padding: 15px; 
-            border-radius: 10px; font-weight: 700; width: 100%; cursor: pointer; 
-            margin-top: 20px; transition: 0.3s;
-        }
-
-        /* Footer Carrito */
-        .footer-cart { 
-            position: fixed; bottom: 0; width: 100%; background: var(--naranja); 
-            color: black; padding: 15px; display: none; justify-content: space-around; 
-            font-weight: bold; align-items: center; z-index: 1000;
-        }
-
-        /* Ticket */
-        .overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; align-items:center; justify-content:center; }
-        .ticket { background:#fff; color:#000; padding:30px; width:320px; font-family:'Courier New', monospace; text-transform: uppercase; }
+        .instrucciones { width: 100%; background: #000; border: 1px solid #333; color: white; padding: 12px; border-radius: 10px; margin-top: 10px; font-family: inherit; }
+        .metodo-pago { margin-top: 20px; padding: 15px; background: #000; border-radius: 10px; }
+        .beta-msg { color: #ffae42; font-size: 0.8rem; font-style: italic; margin-top: 10px; display: none; }
+        
+        .footer-cart { position: fixed; bottom: 0; width: 100%; background: var(--naranja); color: black; padding: 15px; display: none; justify-content: space-around; font-weight: bold; z-index: 1000; }
+        .overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; align-items:center; justify-content:center; overflow-y: auto; }
+        .ticket { background:#fff; color:#000; padding:30px; width:320px; font-family:'Courier New', monospace; text-transform: uppercase; margin: 20px; }
+        .btn-clandestino { background: var(--naranja); color: black; border: none; padding: 15px; border-radius: 10px; font-weight: 700; width: 100%; cursor: pointer; margin-top: 20px; }
+        
+        .contacto { text-align: center; margin: 40px 0; padding: 20px; border-top: 1px solid #333; }
+        .contacto a { color: var(--naranja); text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -94,28 +47,38 @@
 <div id="vista-menu">
     <header>
         <h1>Clandestino</h1>
-        <p class="sub">Gourmet & Misterio</p>
+        <div class="horario-aviso">
+            <strong>🕒 HORARIOS:</strong><br>
+            2PM - 10PM: Pedidos Comunes | 5AM - 11AM: Próximo día
+        </div>
     </header>
 
     <div class="container">
         <h2 class="seccion-titulo">Sándwiches de Autor</h2>
         <div class="grid" id="menu-sandwiches"></div>
-
         <h2 class="seccion-titulo">Bebidas Frías</h2>
         <div class="grid" id="menu-bebidas"></div>
+        <div class="contacto">
+            <p>Dudas o pedidos: <a href="tel:3104438759">3104438759</a></p>
+        </div>
     </div>
 </div>
 
 <div id="vista-detalle">
     <div class="config-panel">
-        <center>
-            <i id="det-icono" style="font-size: 4rem; color: var(--naranja);"></i>
-            <h2 id="det-titulo" style="font-family: 'Playfair Display'; font-size: 2.5rem;"></h2>
-        </center>
-        <div id="cont-transformacion"></div>
-        <h4>NOTAS PARA EL CHEF</h4>
+        <center><h2 id="det-titulo" style="color:var(--naranja)"></h2></center>
+        
+        <h4 class="tag-quitar">¿QUITAR ALGÚN INGREDIENTE? (Gratis)</h4>
+        <div id="lista-quitar"></div>
+
+        <h4 class="tag-extra">AÑADIR EXTRAS (+$1.000 c/u)</h4>
+        <div id="lista-extras"></div>
+
+        <h4 style="margin-top:20px;">NOTAS PARA EL CHEF</h4>
         <textarea id="notas-pedido" class="instrucciones" placeholder="Ej: Pan muy tostado..."></textarea>
-        <div id="precio-final" style="font-size: 2rem; text-align: center; margin-top: 20px; color: var(--naranja);">$0</div>
+        
+        <div id="precio-final" style="font-size: 2.5rem; text-align: center; margin-top: 20px; color: var(--naranja); font-weight: bold;">$0</div>
+        
         <button class="btn-clandestino" onclick="añadirOrden()">AÑADIR A LA ORDEN</button>
         <button onclick="cerrarDetalle()" style="background:none; border:none; color:#666; width:100%; margin-top:10px; cursor:pointer;">Regresar</button>
     </div>
@@ -123,66 +86,115 @@
 
 <div id="footer-bar" class="footer-cart">
     <span>CARRITO: <span id="total-final">$0</span></span>
-    <button id="btnEnviar" onclick="finalizarTodo()" style="background:black; color:white; border:none; padding:8px 15px; border-radius:5px; cursor:pointer;">ENVIAR PEDIDO</button>
+    <button onclick="abrirCajaFinal()" style="background:black; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer; font-weight: bold;">PAGAR AHORA</button>
+</div>
+
+<div id="overlay-final" class="overlay">
+    <div class="config-panel" style="width: 90%; max-width: 400px;">
+        <h3 style="color:var(--naranja)">FINALIZAR PEDIDO</h3>
+        <label>¿A DÓNDE LO ENVIAMOS?</label>
+        <input type="text" id="envio-dir" class="instrucciones" placeholder="Dirección exacta y Barrio">
+        
+        <div class="metodo-pago">
+            <label>MÉTODO DE PAGO:</label><br><br>
+            <input type="radio" name="pago" value="efectivo" checked onclick="togglePago()"> Efectivo
+            <input type="radio" name="pago" value="electronico" onclick="togglePago()"> Electrónico
+            
+            <div id="area-efectivo" style="margin-top:15px;">
+                <label>¿Con cuánto vas a pagar?</label>
+                <input type="number" id="pago-con" class="instrucciones" oninput="calcularCambio()" placeholder="Ej: 20000">
+                <p id="vueltas-txt" style="color:var(--naranja); font-weight: bold; margin-top:10px;">Tu cambio: $0</p>
+            </div>
+            <div id="area-electronico" class="beta-msg">
+                Lo siento, esta función está en beta y demo de la página en la que te encuentras, estamos haciendo lo posible para mejorar tu experiencia en Sándwich Clandestino, gracias.
+            </div>
+        </div>
+        
+        <button class="btn-clandestino" onclick="enviarPedidoFinal()">ENVIAR PEDIDO A COCINA</button>
+        <button onclick="document.getElementById('overlay-final').style.display='none'" style="background:none; border:none; color:#666; width:100%; margin-top:10px; cursor:pointer;">Volver al carrito</button>
+    </div>
 </div>
 
 <div id="overlay-ticket" class="overlay">
     <div class="ticket">
-        <center><h3>CLANDESTINO</h3><p>RECIBO DE COMPRA</p></center>
+        <center><h3>CLANDESTINO</h3><p>TICKET DE PEDIDO</p></center>
         <hr style="border: 1px dashed #000">
         <div id="ticket-items"></div>
         <hr style="border: 1px dashed #000">
-        <p>TOTAL: <span id="ticket-total"></span></p>
-        <button class="btn-clandestino" onclick="location.reload()">FINALIZAR</button>
+        <p><strong>TOTAL: <span id="ticket-total"></span></strong></p>
+        <p id="ticket-info-pago"></p>
+        <button class="btn-clandestino" onclick="location.reload()">ENTENDIDO</button>
     </div>
 </div>
 
 <script>
-    // URL DE TU BASE DE DATOS MODIFICADA
     const urlDatabase = "https://sandwich-clandestinos-default-rtdb.firebaseio.com/pedidos.json";
 
     const sandwiches = [
-        { id: 1, nombre: "Tradicional", icono: "fa-solid fa-bread-slice", precio: 4000 },
-        { id: 2, nombre: "Pollo Broaster", icono: "fa-solid fa-drumstick-bite", precio: 5000 },
-        { id: 3, nombre: "Sándwich Burger", icono: "fa-solid fa-burger", precio: 7000 },
-        { id: 4, nombre: "El Subterráneo", icono: "fa-solid fa-khanda", precio: 8500 }
+        { id: 1, nombre: "Tradicional", desc: "Es un sándwich de calidad suave y sabroso ideal para un buen desayuno pero listo para un bocadillo.", precio: 4000, icono: "fa-solid fa-bread-slice" },
+        { id: 2, nombre: "Sándwich de Pollo", desc: "Mezcla de maravillas secretas, contiene huevo del más allá y pechuga de dragón.", precio: 5000, icono: "fa-solid fa-drumstick-bite" },
+        { id: 3, nombre: "Sándwich Burger", desc: "Es como una hamburguesa pero mejor XD.", precio: 7000, icono: "fa-solid fa-burger" },
+        { id: 4, nombre: "El Subterráneo", desc: "Maravilla de carne de vaca alienígena, dulce salsa, queso de vaca tremenda y huevo calcinado.", precio: 6000, icono: "fa-solid fa-khanda" }
     ];
 
     const bebidas = [
         { id: 101, nombre: "Pepsi Personal", precio: 2500, icono: "fa-solid fa-bottle-droplet" },
-        { id: 102, nombre: "Manzana Personal", precio: 2500, icono: "fa-solid fa-bottle-droplet" },
-        { id: 103, nombre: "Coca-Cola 1.5L", precio: 6000, icono: "fa-solid fa-bottle-water" },
-        { id: 104, nombre: "Gaseosa Jip", precio: 2000, icono: "fa-solid fa-bottle-droplet" }
+        { id: 102, nombre: "Manzana Personal", precio: 2000, icono: "fa-solid fa-bottle-droplet" },
+        { id: 103, nombre: "Gaseosa 1L", precio: 8000, icono: "fa-solid fa-bottle-water" },
+        { id: 104, nombre: "Gaseosa Jip", precio: 2000, icono: "fa-solid fa-bottle-droplet" },
+        { id: 105, nombre: "Juego GIP", precio: 5000, icono: "fa-solid fa-glass-water" }
     ];
 
-    const adicionales = ["Queso Extra", "Tocino", "Huevo", "Aguacate"];
+    const ingredientesBase = ["Cebolla", "Tomate", "Lechuga", "Salsa Especial", "Pepinillos"];
+    const extrasDisponibles = ["Queso Extra", "Tocino", "Huevo", "Aguacate"];
+    const precioExtra = 1000;
+
     let carrito = [];
     let actual = null;
 
     function init() {
         const sBox = document.getElementById('menu-sandwiches');
         sandwiches.forEach(s => {
-            sBox.innerHTML += `<div class="card" onclick="abrirSándwich(${s.id})"><i class="${s.icono}"></i><h3>${s.nombre}</h3><span style="color:var(--naranja)">$${s.precio.toLocaleString()}</span></div>`;
+            sBox.innerHTML += `<div class="card" onclick="abrirSándwich(${s.id})">
+                <i class="${s.icono}"></i><h3>${s.nombre}</h3>
+                <p>${s.desc}</p>
+                <span style="color:var(--naranja); font-weight:bold;">$${s.precio.toLocaleString()}</span>
+            </div>`;
         });
-
         const bBox = document.getElementById('menu-bebidas');
         bebidas.forEach(b => {
-            bBox.innerHTML += `<div class="card" onclick="añadirBebida(${b.id})"><i class="${b.icono}"></i><h3>${b.nombre}</h3><span style="color:var(--naranja)">$${b.precio.toLocaleString()}</span></div>`;
+            bBox.innerHTML += `<div class="card" onclick="añadirBebida(${b.id})">
+                <i class="${b.icono}"></i><h3>${b.nombre}</h3>
+                <span style="color:var(--naranja); font-weight:bold;">$${b.precio.toLocaleString()}</span>
+            </div>`;
         });
     }
 
     function abrirSándwich(id) {
         actual = sandwiches.find(s => s.id === id);
-        document.getElementById('det-icono').className = actual.icono;
         document.getElementById('det-titulo').innerText = actual.nombre;
-        const trans = document.getElementById('cont-transformacion');
-        trans.innerHTML = "<h4>Adicionales (+$500)</h4>";
-        adicionales.forEach(ing => {
-            trans.innerHTML += `<div class="opcion-row">${ing} <input type="checkbox" class="ing-check" value="${ing}" onchange="calc()"></div>`;
+        
+        const qBox = document.getElementById('lista-quitar');
+        qBox.innerHTML = "";
+        ingredientesBase.forEach(ing => {
+            qBox.innerHTML += `<div class="opcion-row">${ing} <input type="checkbox" class="check-quitar" value="${ing}"></div>`;
         });
+
+        const eBox = document.getElementById('lista-extras');
+        eBox.innerHTML = "";
+        extrasDisponibles.forEach(ext => {
+            eBox.innerHTML += `<div class="opcion-row">${ext} (+$1.000) <input type="checkbox" class="check-extra" value="${ext}" onchange="calc()"></div>`;
+        });
+
         document.getElementById('vista-menu').style.display = 'none';
         document.getElementById('vista-detalle').style.display = 'block';
         calc();
+    }
+
+    function calc() {
+        let numExtras = document.querySelectorAll('.check-extra:checked').length;
+        let total = actual.precio + (numExtras * precioExtra);
+        document.getElementById('precio-final').innerText = "$" + total.toLocaleString();
     }
 
     function añadirBebida(id) {
@@ -191,18 +203,19 @@
         actualizarFooter();
     }
 
-    function calc() {
-        let extras = document.querySelectorAll('.ing-check:checked').length;
-        document.getElementById('precio-final').innerText = "$" + (actual.precio + (extras * 500)).toLocaleString();
-    }
-
     function añadirOrden() {
-        let mods = Array.from(document.querySelectorAll('.ing-check:checked')).map(c => c.value);
+        let quitar = Array.from(document.querySelectorAll('.check-quitar:checked')).map(c => c.value);
+        let extras = Array.from(document.querySelectorAll('.check-extra:checked')).map(c => c.value);
         let nota = document.getElementById('notas-pedido').value;
+        
+        let det = "";
+        if(quitar.length > 0) det += "SIN: " + quitar.join(", ") + " | ";
+        if(extras.length > 0) det += "EXTRA: " + extras.join(", ");
+        
         carrito.push({
             nombre: actual.nombre,
-            total: actual.precio + (mods.length * 500),
-            detalles: mods.join(", ") || "Normal",
+            total: actual.precio + (extras.length * precioExtra),
+            detalles: det || "Normal",
             nota: nota
         });
         cerrarDetalle();
@@ -223,44 +236,54 @@
         }
     }
 
-    async function finalizarTodo() {
-        const btn = document.getElementById('btnEnviar');
-        btn.disabled = true;
-        btn.innerText = "ENVIANDO...";
+    function abrirCajaFinal() {
+        document.getElementById('overlay-final').style.display = 'flex';
+    }
 
-        const pedidoAFirebase = {
+    function togglePago() {
+        const tipo = document.querySelector('input[name="pago"]:checked').value;
+        document.getElementById('area-efectivo').style.display = (tipo === 'efectivo') ? 'block' : 'none';
+        document.getElementById('area-electronico').style.display = (tipo === 'electronico') ? 'block' : 'none';
+    }
+
+    function calcularCambio() {
+        let total = carrito.reduce((s,i) => s + i.total, 0);
+        let pagoCon = parseFloat(document.getElementById('pago-con').value) || 0;
+        let cambio = pagoCon - total;
+        document.getElementById('vueltas-txt').innerText = "Tu cambio: $" + (cambio > 0 ? cambio.toLocaleString() : 0);
+    }
+
+    async function enviarPedidoFinal() {
+        const dir = document.getElementById('envio-dir').value;
+        if(!dir) return alert("Por favor, danos una dirección para el envío.");
+
+        const metodo = document.querySelector('input[name="pago"]:checked').value;
+        const total = carrito.reduce((s,i) => s + i.total, 0);
+        
+        const pedido = {
             id: Date.now(),
             hora: new Date().toLocaleTimeString(),
             items: carrito,
-            total: carrito.reduce((s,i) => s + i.total, 0)
+            total: total,
+            direccion: dir,
+            metodoPago: metodo,
+            pagoCon: metodo === 'efectivo' ? document.getElementById('pago-con').value : 'N/A'
         };
 
         try {
-            // BLOQUE DE CONEXIÓN MODIFICADO SEGÚN TU SOLICITUD
-            await fetch(urlDatabase, {
-                method: 'POST',
-                body: JSON.stringify(pedidoAFirebase),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+            await fetch(urlDatabase, { method: 'POST', body: JSON.stringify(pedido) });
+            mostrarTicket(pedido);
+        } catch (e) { alert("Error de red, intenta de nuevo."); }
+    }
 
-            // MOSTRAR TICKET
-            const tkt = document.getElementById('ticket-items');
-            tkt.innerHTML = "";
-            let total = 0;
-            carrito.forEach(i => {
-                tkt.innerHTML += `<p>${i.nombre} - $${i.total.toLocaleString()}<br><small>${i.detalles}</small></p>`;
-                total += i.total;
-            });
-            document.getElementById('ticket-total').innerText = "$" + total.toLocaleString();
-            document.getElementById('overlay-ticket').style.display = 'flex';
-            
-        } catch (error) {
-            alert("Error de conexión. Revisa que las reglas de Firebase estén en true.");
-            btn.disabled = false;
-            btn.innerText = "ENVIAR PEDIDO";
-        }
+    function mostrarTicket(p) {
+        const tkt = document.getElementById('ticket-items');
+        tkt.innerHTML = `<p><strong>A:</strong> ${p.direccion}</p><p><strong>PAGO:</strong> ${p.metodoPago}</p><hr>`;
+        p.items.forEach(i => {
+            tkt.innerHTML += `<p>${i.nombre} - $${i.total.toLocaleString()}<br><small>${i.detalles}</small></p>`;
+        });
+        document.getElementById('ticket-total').innerText = "$" + p.total.toLocaleString();
+        document.getElementById('overlay-ticket').style.display = 'flex';
     }
 
     init();
