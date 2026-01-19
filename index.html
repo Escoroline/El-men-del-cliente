@@ -7,79 +7,112 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root { --dorado: #d4af37; --negro: #0a0a0a; --gris: #1a1a1a; --blanco: #e0e0e0; }
-        body { background-color: var(--negro); color: var(--blanco); font-family: 'Montserrat', sans-serif; margin: 0; padding-bottom: 100px; background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #0a0a0a 100%); }
-        header { text-align: center; padding: 50px 20px; border-bottom: 2px solid var(--dorado); background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://www.transparenttextures.com/patterns/black-paper.png'); }
-        h1 { font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--dorado); margin: 0; text-transform: uppercase; letter-spacing: 5px; }
+
+        /* PANTALLA DE CARGA */
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--negro); z-index: 9999; display: flex;
+            flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+        .sandwich-icon {
+            width: 60px; height: 40px; border: 3px solid var(--dorado);
+            border-radius: 8px; position: relative; margin-bottom: 20px;
+            animation: bounce 0.8s infinite alternate;
+        }
+        .sandwich-icon::after {
+            content: ""; position: absolute; top: 12px; left: 0;
+            width: 100%; height: 4px; background: var(--dorado);
+        }
+        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-15px); } }
+
+        body { 
+            background-color: var(--negro); color: var(--blanco); 
+            font-family: 'Montserrat', sans-serif; margin: 0; padding-bottom: 100px;
+            background-image: url('https://www.transparenttextures.com/patterns/dark-matter.png');
+        }
+
+        header { 
+            text-align: center; padding: 60px 20px; border-bottom: 2px solid var(--dorado);
+            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://www.transparenttextures.com/patterns/black-paper.png');
+        }
+
+        h1 { font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--dorado); margin: 0; letter-spacing: 5px; text-transform: uppercase; }
+
         .container { max-width: 900px; margin: auto; padding: 20px; }
         .section-header { display: flex; align-items: center; justify-content: center; margin: 40px 0; color: var(--dorado); font-family: 'Playfair Display'; font-size: 1.8rem; }
-        .section-header::before, .section-header::after { content: ""; flex: 1; height: 1px; background: var(--dorado); margin: 0 20px; }
+        .section-header::before, .section-header::after { content: ""; flex: 1; height: 1px; background: var(--dorado); margin: 0 20px; opacity: 0.4; }
+
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-        .menu-item { cursor: pointer; transition: 0.3s; padding: 15px; border-radius: 10px; border: 1px solid transparent; }
-        .menu-item:hover { border: 1px solid var(--dorado); background: rgba(212, 175, 55, 0.05); }
-        .item-header { display: flex; justify-content: space-between; border-bottom: 1px dotted var(--dorado); }
+        .menu-item { cursor: pointer; transition: 0.3s; padding: 18px; border-radius: 12px; border: 1px solid rgba(212, 175, 55, 0.1); background: rgba(20, 20, 20, 0.6); }
+        .menu-item:hover { border-color: var(--dorado); background: rgba(212, 175, 55, 0.05); transform: scale(1.02); }
+        
+        .item-header { display: flex; justify-content: space-between; border-bottom: 1px dotted var(--dorado); padding-bottom: 5px; }
         .item-name { font-weight: 600; color: var(--dorado); text-transform: uppercase; }
-        #carrito-barra { position: fixed; bottom: 0; width: 100%; background: var(--dorado); color: black; padding: 20px 0; display: none; justify-content: space-around; align-items: center; font-weight: bold; z-index: 1000; box-shadow: 0 -5px 20px rgba(0,0,0,0.5); }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); z-index: 2000; align-items: center; justify-content: center; overflow-y: auto; }
-        .modal-content { background: var(--gris); padding: 30px; border: 1px solid var(--dorado); border-radius: 20px; width: 90%; max-width: 480px; text-align: center; }
-        .quitar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
-        .check-box { background: #252525; padding: 10px; border-radius: 5px; display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; }
-        input, select { width: 100%; background: #000; color: white; border: 1px solid #444; padding: 12px; border-radius: 10px; margin-top: 10px; box-sizing: border-box; }
-        .btn-gold { background: var(--dorado); color: black; border: none; padding: 15px; font-weight: bold; border-radius: 50px; cursor: pointer; text-transform: uppercase; width: 100%; margin-top: 10px; }
-        .btn-outline { background: none; border: 1px solid var(--dorado); color: var(--dorado); padding: 12px; border-radius: 50px; cursor: pointer; width: 100%; margin-top: 10px; }
-        .recibo { background: white; color: black; padding: 20px; font-family: 'Courier New', monospace; text-align: left; }
+        .item-desc { font-size: 0.8rem; color: #888; margin-top: 10px; line-height: 1.4; font-style: italic; }
+
+        #carrito-barra { position: fixed; bottom: 0; width: 100%; background: var(--dorado); color: black; padding: 20px 0; display: none; justify-content: space-around; align-items: center; font-weight: bold; z-index: 1000; box-shadow: 0 -5px 25px rgba(0,0,0,0.8); }
+        
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.97); z-index: 2000; align-items: center; justify-content: center; overflow-y: auto; }
+        .modal-content { background: var(--gris); padding: 30px; border: 1px solid var(--dorado); border-radius: 20px; width: 85%; max-width: 450px; text-align: center; }
+        
+        input { width: 100%; padding: 12px; background: #000; color: #fff; border: 1px solid #333; border-radius: 8px; margin-top: 10px; box-sizing: border-box; }
+        .btn-gold { background: var(--dorado); color: black; border: none; padding: 15px; font-weight: bold; border-radius: 50px; cursor: pointer; text-transform: uppercase; width: 100%; margin-top: 15px; }
+        .recibo { background: white; color: black; padding: 20px; font-family: 'Courier New', monospace; text-align: left; font-size: 0.85rem; }
+
         @media (max-width: 768px) { .menu-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
+<div id="loader">
+    <div class="sandwich-icon"></div>
+    <p style="color: var(--dorado); letter-spacing: 3px; font-size: 0.7rem;">CARGANDO EL MENÚ...</p>
+</div>
+
 <header>
     <h1>Clandestino</h1>
-    <div style="color: var(--dorado); letter-spacing: 3px; font-size: 0.8rem;">SÁNDWICHES GOURMET</div>
+    <div style="color: var(--dorado); letter-spacing: 3px; font-size: 0.8rem; margin-top: 5px;">SÁNDWICHES DE AUTOR</div>
 </header>
 
 <div class="container">
     <div class="section-header">SÁNDWICHES</div>
-    <div class="menu-grid" id="sandwiches-container"></div>
+    <div id="sandwiches-container" class="menu-grid"></div>
     <div class="section-header">BEBIDAS</div>
-    <div class="menu-grid" id="bebidas-container"></div>
+    <div id="bebidas-container" class="menu-grid"></div>
 </div>
 
 <div style="text-align: center; padding: 40px;">
-    <p>Atención Personalizada:</p>
-    <a href="tel:3104438759" style="color:var(--dorado); text-decoration:none; font-weight:bold; font-size:1.2rem;">📞 3104438759</a>
+    <p style="font-size: 0.8rem; opacity: 0.5;">Llámanos:</p>
+    <a href="tel:3104438759" style="color:var(--dorado); text-decoration:none; font-weight:bold;">3104438759</a>
 </div>
 
 <div id="carrito-barra">
-    <span id="cart-count">PRODUCTOS: 0</span>
+    <span id="cart-count">ORDEN: 0</span>
     <span id="cart-total">$0</span>
-    <button onclick="abrirCheckout()" style="background:black; color:white; border:none; padding:10px 20px; border-radius:20px; font-weight:bold; cursor:pointer;">COMPRAR</button>
+    <button onclick="abrirCheckout()" style="background:black; color:white; border:none; padding:10px 20px; border-radius:20px; font-weight:bold; cursor:pointer;">VER PEDIDO</button>
 </div>
 
 <div id="modal-personalizar" class="modal">
     <div class="modal-content">
-        <h2 id="m-nombre" style="color:var(--dorado)"></h2>
-        <div class="quitar-grid" id="m-ingredientes"></div>
-        <button class="btn-gold" onclick="agregarAlCarrito()">AGREGAR AL CARRITO</button>
-        <button class="btn-outline" onclick="cerrarModales()">AGREGAR MÁS PRODUCTOS</button>
+        <h2 id="m-nombre" style="color:var(--dorado); font-family: 'Playfair Display'; margin-bottom: 5px;"></h2>
+        <p id="m-desc-completa" style="font-size: 0.75rem; color: #999; margin-bottom: 20px;"></p>
+        <p style="font-size:0.8rem; font-weight: bold; color: var(--dorado);">¿QUITAR INGREDIENTES?</p>
+        <div id="m-ingredientes" style="margin: 15px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div>
+        <button class="btn-gold" onclick="agregarAlCarrito()">AGREGAR A MI ORDEN</button>
+        <button onclick="cerrarModales()" style="background:none; color:#777; border:none; margin-top:15px; cursor:pointer;">VOLVER</button>
     </div>
 </div>
 
 <div id="modal-checkout" class="modal">
     <div class="modal-content">
-        <h2 style="color:var(--dorado)">FINALIZAR</h2>
-        <div class="recibo" id="resumen-lista" style="font-size:0.8rem; margin-bottom:15px;"></div>
-        <input type="text" id="c-direccion" placeholder="Dirección y Barrio">
-        <select id="c-metodo" onchange="toggleMetodo()">
-            <option value="efectivo">EFECTIVO</option>
-            <option value="electronico">ELECTRÓNICO</option>
-        </select>
-        <div id="pago-efectivo">
-            <input type="number" id="c-cuanto" placeholder="¿Con cuánto pagas?" oninput="calcularCambio()">
-            <div id="vueltas-box" style="color:var(--dorado); font-weight:bold; margin-top:10px;">CAMBIO: $0</div>
-        </div>
-        <div id="pago-electronico" style="display:none; color:var(--dorado); font-size:0.7rem; padding:10px;">Opción en desarrollo. Usa Efectivo.</div>
-        <button class="btn-gold" id="btn-final" onclick="enviarPedido()">ENVIAR A COCINA</button>
-        <button class="btn-outline" onclick="cerrarModales()">VOLVER</button>
+        <h2 style="color:var(--dorado)">FINALIZAR COMPRA</h2>
+        <div class="recibo" id="resumen-lista" style="margin-bottom:15px; max-height: 150px; overflow-y: auto;"></div>
+        <input type="text" id="c-direccion" placeholder="Dirección Exacta y Barrio">
+        <input type="number" id="c-cuanto" placeholder="¿Con cuánto pagas?" oninput="calcularCambio()">
+        <p id="vueltas-box" style="color:var(--dorado); font-weight:bold; margin-top:10px;">CAMBIO: $0</p>
+        <button class="btn-gold" onclick="enviarPedido()">ENVIAR PEDIDO</button>
+        <button onclick="cerrarModales()" style="background:none; color:#666; border:none; margin-top:10px; cursor:pointer;">CANCELAR</button>
     </div>
 </div>
 
@@ -88,12 +121,17 @@
     let carrito = [];
     let seleccionado = null;
 
+    window.onload = () => { setTimeout(() => { 
+        document.getElementById('loader').style.opacity = '0'; 
+        setTimeout(()=> document.getElementById('loader').style.display='none', 500);
+    }, 3000); };
+
     const data = {
         s: [
-            { n: "Sándwich Tradicional", p: 4000, ing: ["Cebolla", "Tomate", "Pepino", "Lechuga", "Jamón", "Queso Cheddar"] },
-            { n: "Sándwich de Pollo", p: 6000, ing: ["Tomate", "Lechuga", "Huevo", "Pepinos", "Pollo Apanado"] },
-            { n: "Sándwich de Burger", p: 8000, ing: ["Queso", "Tomate", "Cebolla", "Pepinos", "Carne Burger"] },
-            { n: "Sándwich Subterráneo", p: 7500, ing: ["Costilla BBQ", "Tomate", "Lechuga"] }
+            { n: "Sándwich Tradicional", p: 4000, desc: "Cebolla, tomate, pepino, lechuga, 3 jamones, queso cheddar, salsa secreta.", ing: ["Cebolla", "Tomate", "Pepino", "Lechuga", "Jamón", "Queso Cheddar"] },
+            { n: "Sándwich de Pollo", p: 6000, desc: "Tomate, lechuga, huevo, pepinos, pollo apanado, salsa secreta.", ing: ["Tomate", "Lechuga", "Huevo", "Pepinos", "Pollo Apanado"] },
+            { n: "Sándwich de Burger", p: 8000, desc: "Queso, tomate, cebolla, pepinos, carne burger, lechuga, salsa.", ing: ["Queso", "Tomate", "Cebolla", "Pepinos", "Carne Burger", "Lechuga"] },
+            { n: "Sándwich Subterráneo", p: 7500, desc: "Costillas de cerdo a la BBQ, salsa secreta, tomate, lechuga.", ing: ["Costilla BBQ", "Tomate", "Lechuga"] }
         ],
         b: [
             { n: "Mini Pepsi", p: 2000 }, { n: "Mini Manzana", p: 2000 }, { n: "Coca-Cola 1.5L", p: 8000 }, { n: "Jugo del Valle", p: 7000 }
@@ -102,16 +140,37 @@
 
     function render() {
         const sCont = document.getElementById('sandwiches-container');
-        data.s.forEach(x => { sCont.innerHTML += `<div class="menu-item" onclick="abrirP('${x.n}','s')"><div class="item-header"><span class="item-name">${x.n}</span><span>$${x.p}</span></div></div>`; });
+        data.s.forEach(x => {
+            sCont.innerHTML += `
+                <div class="menu-item" onclick="abrirP('${x.n}','s')">
+                    <div class="item-header">
+                        <span class="item-name">${x.n}</span>
+                        <span>$${x.p.toLocaleString()}</span>
+                    </div>
+                    <div class="item-desc">${x.desc}</div>
+                </div>`;
+        });
         const bCont = document.getElementById('bebidas-container');
-        data.b.forEach(x => { bCont.innerHTML += `<div class="menu-item" onclick="abrirP('${x.n}','b')"><div class="item-header"><span class="item-name">${x.n}</span><span>$${x.p}</span></div></div>`; });
+        data.b.forEach(x => {
+            bCont.innerHTML += `
+                <div class="menu-item" onclick="abrirP('${x.n}','b')">
+                    <div class="item-header">
+                        <span class="item-name">${x.n}</span>
+                        <span>$${x.p.toLocaleString()}</span>
+                    </div>
+                </div>`;
+        });
     }
 
     function abrirP(n, t) {
         seleccionado = t==='s' ? data.s.find(i=>i.n===n) : data.b.find(i=>i.n===n);
         document.getElementById('m-nombre').innerText = seleccionado.n;
+        document.getElementById('m-desc-completa').innerText = seleccionado.desc || "Bebida refrescante";
         const ingBox = document.getElementById('m-ingredientes');
-        ingBox.innerHTML = seleccionado.ing ? seleccionado.ing.map(i => `<div class="check-box"><span>SIN ${i}</span><input type="checkbox" class="q-check" value="${i}"></div>`).join('') : "Listo para añadir";
+        ingBox.innerHTML = seleccionado.ing ? seleccionado.ing.map(i => `
+            <div style="background:#1a1a1a; border:1px solid #333; padding:10px; border-radius:8px; font-size:0.7rem; display:flex; justify-content:space-between;">
+                SIN ${i} <input type="checkbox" class="q-check" value="${i}">
+            </div>`).join('') : "<p style='grid-column: 1/-1;'>Esta opción no requiere cambios.</p>";
         document.getElementById('modal-personalizar').style.display = 'flex';
     }
 
@@ -119,51 +178,35 @@
         const q = Array.from(document.querySelectorAll('.q-check:checked')).map(c => c.value);
         carrito.push({ n: seleccionado.n, p: seleccionado.p, sin: q.join(", ") || "Nada" });
         document.getElementById('carrito-barra').style.display = 'flex';
-        document.getElementById('cart-count').innerText = `PRODUCTOS: ${carrito.length}`;
-        document.getElementById('cart-total').innerText = `$${carrito.reduce((a,b)=>a+b.p,0)}`;
+        document.getElementById('cart-count').innerText = `ORDEN: ${carrito.length}`;
+        document.getElementById('cart-total').innerText = `$${carrito.reduce((a,b)=>a+b.p,0).toLocaleString()}`;
         cerrarModales();
     }
 
     function abrirCheckout() {
         const res = document.getElementById('resumen-lista');
         const total = carrito.reduce((a,b)=>a+b.p,0);
-        res.innerHTML = "<strong>RESUMEN:</strong><hr>" + carrito.map(i => `${i.n} ($${i.p})<br><small>Sin: ${i.sin}</small><br>`).join('') + `<hr><strong>TOTAL: $${total}</strong>`;
+        res.innerHTML = "<strong>TU PEDIDO:</strong><br><hr>" + carrito.map(i => `• ${i.n}<br><small style='color:red;'>&nbsp;&nbsp;Sin: ${i.sin}</small><br>`).join('') + `<hr><strong>TOTAL: $${total.toLocaleString()}</strong>`;
         document.getElementById('modal-checkout').style.display = 'flex';
-    }
-
-    function toggleMetodo() {
-        const m = document.getElementById('c-metodo').value;
-        document.getElementById('pago-efectivo').style.display = m==='efectivo'?'block':'none';
-        document.getElementById('pago-electronico').style.display = m==='electronico'?'block':'none';
     }
 
     function calcularCambio() {
         const total = carrito.reduce((a,b)=>a+b.p,0);
         const paga = document.getElementById('c-cuanto').value || 0;
-        document.getElementById('vueltas-box').innerText = "CAMBIO: $" + (paga-total > 0 ? paga-total : 0);
+        document.getElementById('vueltas-box').innerText = "CAMBIO: $" + (paga-total > 0 ? (paga-total).toLocaleString() : 0);
     }
 
     async function enviarPedido() {
         const dir = document.getElementById('c-direccion').value;
-        if(!dir) return alert("Ingresa dirección");
+        if(!dir) return alert("Por favor, ingresa tu dirección.");
         const total = carrito.reduce((a,b)=>a+b.p,0);
         const paga = document.getElementById('c-cuanto').value || total;
 
-        const pedido = {
-            items: carrito,
-            total: total,
-            direccion: dir, // Cambiado de 'dir' a 'direccion'
-            pagaCon: paga,  // Cambiado de 'paga' a 'pagaCon'
-            cambio: paga - total,
-            hora: new Date().toLocaleTimeString()
-        };
-
+        const pedido = { items: carrito, total, direccion: dir, pagaCon: paga, cambio: paga-total, hora: new Date().toLocaleTimeString() };
         try {
-            const response = await fetch(urlDB, { method: 'POST', body: JSON.stringify(pedido) });
-            if(response.ok) {
-                alert("PEDIDO ENVIADO EXITOSAMENTE");
-                location.reload();
-            }
+            await fetch(urlDB, { method: 'POST', body: JSON.stringify(pedido) });
+            alert("¡ORDEN ENVIADA A COCINA!");
+            location.reload();
         } catch (e) { alert("Error de conexión"); }
     }
 
