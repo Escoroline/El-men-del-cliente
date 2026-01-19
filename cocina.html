@@ -2,75 +2,49 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Panel de Cocina | Clandestino</title>
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <title>Cocina | Clandestino</title>
     <style>
-        body { background-color: #000; color: #ff8c00; font-family: 'Courier Prime', monospace; margin: 0; padding: 20px; }
-        h1 { text-align: center; border-bottom: 2px solid #ff8c00; padding-bottom: 10px; text-transform: uppercase; }
-        #contenedor-pedidos { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
-        .ticket-cocina { border: 2px solid #ff8c00; padding: 15px; background: #080808; position: relative; }
-        .hora { color: #fff; font-size: 0.8rem; }
-        .item-lista { color: #fff; margin: 10px 0; border-left: 3px solid #ff8c00; padding-left: 10px; }
-        .btn-listo { background: #ff8c00; color: #000; border: none; padding: 10px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .btn-listo:hover { background: #fff; }
+        body { background: #000; color: #fff; font-family: 'Courier New', monospace; padding: 20px; }
+        #panel { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
+        .ticket { border: 2px solid #d4af37; background: #111; padding: 20px; border-radius: 15px; }
+        .dir-label { background: #d4af37; color: #000; padding: 10px; font-weight: bold; margin-bottom: 15px; }
+        .item { border-bottom: 1px dashed #444; padding: 10px 0; }
+        .alerta-sin { color: #ff4444; font-weight: bold; background: rgba(255,0,0,0.1); padding: 5px; display: block; margin-top: 5px; }
+        .pago-box { border: 1px solid #00ff00; color: #00ff00; padding: 10px; margin-top: 15px; font-weight: bold; }
+        .btn { background: #d4af37; color: #000; border: none; width: 100%; padding: 15px; font-weight: bold; cursor: pointer; border-radius: 8px; margin-top: 10px; }
     </style>
 </head>
 <body>
-    <h1>📟 PEDIDOS RECIBIDOS</h1>
-    <div id="contenedor-pedidos">Cargando pedidos...</div>
+    <h1 style="text-align:center; color:#d4af37;">📟 PEDIDOS CLANDESTINOS</h1>
+    <div id="panel">CARGANDO...</div>
 
     <script>
-        const urlFirebase = "https://sandwich-clandestinos-default-rtdb.firebaseio.com/pedidos.json";
-
-        async function cargarPedidos() {
-            try {
-                const respuesta = await fetch(urlFirebase);
-                const datos = await respuesta.json();
-                const contenedor = document.getElementById('contenedor-pedidos');
-                contenedor.innerHTML = "";
-
-                if (!datos) {
-                    contenedor.innerHTML = "<h3>NO HAY PEDIDOS PENDIENTES</h3>";
-                    return;
-                }
-
-                Object.keys(datos).forEach(id => {
-                    const pedido = datos[id];
-                    let itemsHTML = "";
-                    pedido.items.forEach(i => {
-                        itemsHTML += `<div class="item-lista">
-                            <strong>${i.nombre}</strong><br>
-                            <small>Extras: ${i.detalles}</small><br>
-                            <small>Nota: ${i.nota || 'Sin notas'}</small>
-                        </div>`;
-                    });
-
-                    contenedor.innerHTML += `
-                        <div class="ticket-cocina">
-                            <span class="hora">HORA: ${pedido.hora}</span>
-                            <hr style="border:0; border-top:1px dashed #ff8c00">
-                            ${itemsHTML}
-                            <button class="btn-listo" onclick="completarPedido('${id}')">MARCAR COMO ENTREGADO</button>
-                        </div>
-                    `;
-                });
-            } catch (error) {
-                console.error("Error al cargar:", error);
+        const url = "https://sandwich-clandestinos-default-rtdb.firebaseio.com/pedidos.json";
+        async function cargar() {
+            const res = await fetch(url);
+            const data = await res.json();
+            const p = document.getElementById('panel');
+            p.innerHTML = "";
+            if(!data) return p.innerHTML = "SIN PEDIDOS";
+            Object.keys(data).forEach(id => {
+                const ped = data[id];
+                p.innerHTML += `
+                    <div class="ticket">
+                        <div class="dir-label">📍 ${ped.dir}</div>
+                        <small>${ped.hora}</small>
+                        ${ped.items.map(i => `<div class="item"><strong>${i.n}</strong><span class="alerta-sin">SIN: ${i.sin}</span></div>`).join('')}
+                        <div class="pago-box">TOTAL: $${ped.total}<br>PAGA: $${ped.paga}<br>CAMBIO: $${ped.cambio}</div>
+                        <button class="btn" onclick="listo('${id}')">ENTREGADO</button>
+                    </div>`;
+            });
+        }
+        async function listo(id) {
+            if(confirm("¿Pedido entregado?")) {
+                await fetch(`https://sandwich-clandestinos-default-rtdb.firebaseio.com/pedidos/${id}.json`, { method: 'DELETE' });
+                cargar();
             }
         }
-
-        async function completarPedido(id) {
-            if(confirm("¿Pedido entregado? Se borrará de la pantalla.")) {
-                await fetch(`https://sandwich-clandestinos-default-rtdb.firebaseio.com/pedidos/${id}.json`, {
-                    method: 'DELETE'
-                });
-                cargarPedidos();
-            }
-        }
-
-        // Refrescar cada 5 segundos
-        setInterval(cargarPedidos, 5000);
-        cargarPedidos();
+        setInterval(cargar, 5000); cargar();
     </script>
 </body>
 </html>
