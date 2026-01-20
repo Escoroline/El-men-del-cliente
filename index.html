@@ -7,59 +7,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root { --dorado: #d4af37; --negro: #0a0a0a; --gris: #1a1a1a; --blanco: #e0e0e0; }
-
-        /* PANTALLA DE CARGA */
-        #loader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--negro); z-index: 9999; display: flex;
-            flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 0.5s ease;
-        }
-        .sandwich-icon {
-            width: 60px; height: 40px; border: 3px solid var(--dorado);
-            border-radius: 8px; position: relative; margin-bottom: 20px;
-            animation: bounce 0.8s infinite alternate;
-        }
-        .sandwich-icon::after {
-            content: ""; position: absolute; top: 12px; left: 0;
-            width: 100%; height: 4px; background: var(--dorado);
-        }
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--negro); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s ease; }
+        .sandwich-icon { width: 60px; height: 40px; border: 3px solid var(--dorado); border-radius: 8px; position: relative; margin-bottom: 20px; animation: bounce 0.8s infinite alternate; }
+        .sandwich-icon::after { content: ""; position: absolute; top: 12px; left: 0; width: 100%; height: 4px; background: var(--dorado); }
         @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-15px); } }
-
-        body { 
-            background-color: var(--negro); color: var(--blanco); 
-            font-family: 'Montserrat', sans-serif; margin: 0; padding-bottom: 100px;
-            background-image: url('https://www.transparenttextures.com/patterns/dark-matter.png');
-        }
-
-        header { 
-            text-align: center; padding: 60px 20px; border-bottom: 2px solid var(--dorado);
-            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://www.transparenttextures.com/patterns/black-paper.png');
-        }
-
+        body { background-color: var(--negro); color: var(--blanco); font-family: 'Montserrat', sans-serif; margin: 0; padding-bottom: 100px; background-image: url('https://www.transparenttextures.com/patterns/dark-matter.png'); }
+        header { text-align: center; padding: 60px 20px; border-bottom: 2px solid var(--dorado); background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://www.transparenttextures.com/patterns/black-paper.png'); }
         h1 { font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--dorado); margin: 0; letter-spacing: 5px; text-transform: uppercase; }
-
         .container { max-width: 900px; margin: auto; padding: 20px; }
         .section-header { display: flex; align-items: center; justify-content: center; margin: 40px 0; color: var(--dorado); font-family: 'Playfair Display'; font-size: 1.8rem; }
         .section-header::before, .section-header::after { content: ""; flex: 1; height: 1px; background: var(--dorado); margin: 0 20px; opacity: 0.4; }
-
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
         .menu-item { cursor: pointer; transition: 0.3s; padding: 18px; border-radius: 12px; border: 1px solid rgba(212, 175, 55, 0.1); background: rgba(20, 20, 20, 0.6); }
         .menu-item:hover { border-color: var(--dorado); background: rgba(212, 175, 55, 0.05); transform: scale(1.02); }
-        
         .item-header { display: flex; justify-content: space-between; border-bottom: 1px dotted var(--dorado); padding-bottom: 5px; }
         .item-name { font-weight: 600; color: var(--dorado); text-transform: uppercase; }
         .item-desc { font-size: 0.8rem; color: #888; margin-top: 10px; line-height: 1.4; font-style: italic; }
-
         #carrito-barra { position: fixed; bottom: 0; width: 100%; background: var(--dorado); color: black; padding: 20px 0; display: none; justify-content: space-around; align-items: center; font-weight: bold; z-index: 1000; box-shadow: 0 -5px 25px rgba(0,0,0,0.8); }
-        
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.97); z-index: 2000; align-items: center; justify-content: center; overflow-y: auto; }
         .modal-content { background: var(--gris); padding: 30px; border: 1px solid var(--dorado); border-radius: 20px; width: 85%; max-width: 450px; text-align: center; }
-        
-        input { width: 100%; padding: 12px; background: #000; color: #fff; border: 1px solid #333; border-radius: 8px; margin-top: 10px; box-sizing: border-box; }
+        input, select { width: 100%; padding: 12px; background: #000; color: #fff; border: 1px solid #333; border-radius: 8px; margin-top: 10px; box-sizing: border-box; font-family: 'Montserrat'; }
         .btn-gold { background: var(--dorado); color: black; border: none; padding: 15px; font-weight: bold; border-radius: 50px; cursor: pointer; text-transform: uppercase; width: 100%; margin-top: 15px; }
         .recibo { background: white; color: black; padding: 20px; font-family: 'Courier New', monospace; text-align: left; font-size: 0.85rem; }
-
+        .qr-img { width: 220px; margin: 15px 0; border: 5px solid white; border-radius: 10px; }
         @media (max-width: 768px) { .menu-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -68,6 +38,29 @@
 <div id="loader">
     <div class="sandwich-icon"></div>
     <p style="color: var(--dorado); letter-spacing: 3px; font-size: 0.7rem;">CARGANDO EL MENÚ...</p>
+</div>
+
+<div id="modal-warning" class="modal">
+    <div class="modal-content" style="max-width: 500px; border: 2px solid #ff4444;">
+        <h3 style="color: #ff4444;">ADVERTENCIA ANTI-SPAM</h3>
+        <p style="font-size: 0.8rem; color: #ccc;">Esta página es solo para pedidos reales. El uso indebido será reportado.</p>
+        <button class="btn-gold" onclick="cerrarAdvertencia()">ACEPTO</button>
+    </div>
+</div>
+
+<div id="modal-pago-qr" class="modal">
+    <div class="modal-content">
+        <h2 style="color:var(--dorado)">PAGO ELECTRÓNICO</h2>
+        <p style="color:#00ff00; font-weight:bold;">HOLA, BIENVENIDO A PAGO ELECTRÓNICO</p>
+        <div style="text-align: left; font-size: 0.85rem; margin-top: 15px;">
+            <p><strong>Paso 1:</strong> Comprador: <span id="display-nombre" style="color:var(--dorado)"></span></p>
+            <p><strong>Paso 2:</strong> Escanea este QR para pagar por <strong>Nequi</strong>.</p>
+            <p><strong>Paso 3:</strong> Al terminar, contáctanos para confirmar. ¡Gracias!</p>
+        </div>
+        <img src="https://i.postimg.cc/mD8zM8vP/edited-image.png" class="qr-img">
+        <button class="btn-gold" onclick="enviarPedido('Electrónico')">CONFIRMAR Y ENVIAR</button>
+        <button onclick="cerrarModales()" style="background:none; color:#777; border:none; margin-top:10px; cursor:pointer;">VOLVER</button>
+    </div>
 </div>
 
 <header>
@@ -82,11 +75,6 @@
     <div id="bebidas-container" class="menu-grid"></div>
 </div>
 
-<div style="text-align: center; padding: 40px;">
-    <p style="font-size: 0.8rem; opacity: 0.5;">Llámanos:</p>
-    <a href="tel:3104438759" style="color:var(--dorado); text-decoration:none; font-weight:bold;">3104438759</a>
-</div>
-
 <div id="carrito-barra">
     <span id="cart-count">ORDEN: 0</span>
     <span id="cart-total">$0</span>
@@ -95,12 +83,9 @@
 
 <div id="modal-personalizar" class="modal">
     <div class="modal-content">
-        <h2 id="m-nombre" style="color:var(--dorado); font-family: 'Playfair Display'; margin-bottom: 5px;"></h2>
-        <p id="m-desc-completa" style="font-size: 0.75rem; color: #999; margin-bottom: 20px;"></p>
-        <p style="font-size:0.8rem; font-weight: bold; color: var(--dorado);">¿QUITAR INGREDIENTES?</p>
+        <h2 id="m-nombre" style="color:var(--dorado)"></h2>
         <div id="m-ingredientes" style="margin: 15px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div>
-        <button class="btn-gold" onclick="agregarAlCarrito()">AGREGAR A MI ORDEN</button>
-        <button onclick="cerrarModales()" style="background:none; color:#777; border:none; margin-top:15px; cursor:pointer;">VOLVER</button>
+        <button class="btn-gold" onclick="agregarAlCarrito()">AGREGAR</button>
     </div>
 </div>
 
@@ -108,69 +93,43 @@
     <div class="modal-content">
         <h2 style="color:var(--dorado)">FINALIZAR COMPRA</h2>
         <div class="recibo" id="resumen-lista" style="margin-bottom:15px; max-height: 150px; overflow-y: auto;"></div>
-        <input type="text" id="c-direccion" placeholder="Dirección Exacta y Barrio">
-        <input type="number" id="c-cuanto" placeholder="¿Con cuánto pagas?" oninput="calcularCambio()">
-        <p id="vueltas-box" style="color:var(--dorado); font-weight:bold; margin-top:10px;">CAMBIO: $0</p>
-        <button class="btn-gold" onclick="enviarPedido()">ENVIAR PEDIDO</button>
+        <input type="text" id="c-nombre" placeholder="Nombre del Comprador">
+        <input type="text" id="c-direccion" placeholder="Dirección y Barrio">
+        <input type="tel" id="c-telefono" placeholder="Celular">
+        <select id="c-metodo" onchange="cambiarMetodo()">
+            <option value="efectivo">EFECTIVO</option>
+            <option value="electronico">PAGO ELECTRÓNICO (NEQUI)</option>
+        </select>
+        <div id="bloque-efectivo">
+            <input type="number" id="c-cuanto" placeholder="¿Con cuánto pagas?" oninput="calcCambio()">
+            <p id="vueltas" style="color:var(--dorado); margin-top:10px;">CAMBIO: $0</p>
+        </div>
+        <button class="btn-gold" id="btn-main" onclick="procesarPago()">ENVIAR PEDIDO</button>
         <button onclick="cerrarModales()" style="background:none; color:#666; border:none; margin-top:10px; cursor:pointer;">CANCELAR</button>
     </div>
 </div>
 
 <script>
     const urlDB = "https://sandwich-clandestinos-default-rtdb.firebaseio.com/pedidos.json";
-    let carrito = [];
-    let seleccionado = null;
+    let carrito = []; let seleccionado = null;
 
-    window.onload = () => { setTimeout(() => { 
-        document.getElementById('loader').style.opacity = '0'; 
-        setTimeout(()=> document.getElementById('loader').style.display='none', 500);
-    }, 3000); };
+    window.onload = () => { setTimeout(() => { document.getElementById('loader').style.display = 'none'; document.getElementById('modal-warning').style.display = 'flex'; }, 2000); };
+    function cerrarAdvertencia() { document.getElementById('modal-warning').style.display = 'none'; }
 
     const data = {
-        s: [
-            { n: "Sándwich Tradicional", p: 4000, desc: "Cebolla, tomate, pepino, lechuga, 3 jamones, queso cheddar, salsa secreta.", ing: ["Cebolla", "Tomate", "Pepino", "Lechuga", "Jamón", "Queso Cheddar"] },
-            { n: "Sándwich de Pollo", p: 6000, desc: "Tomate, lechuga, huevo, pepinos, pollo apanado, salsa secreta.", ing: ["Tomate", "Lechuga", "Huevo", "Pepinos", "Pollo Apanado"] },
-            { n: "Sándwich de Burger", p: 8000, desc: "Queso, tomate, cebolla, pepinos, carne burger, lechuga, salsa.", ing: ["Queso", "Tomate", "Cebolla", "Pepinos", "Carne Burger", "Lechuga"] },
-            { n: "Sándwich Subterráneo", p: 7500, desc: "Costillas de cerdo a la BBQ, salsa secreta, tomate, lechuga.", ing: ["Costilla BBQ", "Tomate", "Lechuga"] }
-        ],
-        b: [
-            { n: "Mini Pepsi", p: 2000 }, { n: "Mini Manzana", p: 2000 }, { n: "Coca-Cola 1.5L", p: 8000 }, { n: "Jugo del Valle", p: 7000 }
-        ]
+        s: [{ n: "Sándwich Tradicional", p: 4000, ing: ["Cebolla", "Tomate", "Pepino", "Lechuga", "Jamón", "Queso"] }, { n: "Sándwich de Pollo", p: 6000, ing: ["Tomate", "Lechuga", "Huevo", "Pepino", "Pollo"] }, { n: "Sándwich de Burger", p: 8000, ing: ["Queso", "Tomate", "Cebolla", "Carne", "Lechuga"] }, { n: "Sándwich Subterráneo", p: 7500, ing: ["Costilla BBQ", "Tomate", "Lechuga"] }],
+        b: [{ n: "Mini Pepsi", p: 2000 }, { n: "Mini Manzana", p: 2000 }, { n: "Coca-Cola 1.5L", p: 8000 }]
     };
 
     function render() {
-        const sCont = document.getElementById('sandwiches-container');
-        data.s.forEach(x => {
-            sCont.innerHTML += `
-                <div class="menu-item" onclick="abrirP('${x.n}','s')">
-                    <div class="item-header">
-                        <span class="item-name">${x.n}</span>
-                        <span>$${x.p.toLocaleString()}</span>
-                    </div>
-                    <div class="item-desc">${x.desc}</div>
-                </div>`;
-        });
-        const bCont = document.getElementById('bebidas-container');
-        data.b.forEach(x => {
-            bCont.innerHTML += `
-                <div class="menu-item" onclick="abrirP('${x.n}','b')">
-                    <div class="item-header">
-                        <span class="item-name">${x.n}</span>
-                        <span>$${x.p.toLocaleString()}</span>
-                    </div>
-                </div>`;
-        });
+        data.s.forEach(x => { document.getElementById('sandwiches-container').innerHTML += `<div class="menu-item" onclick="abrirP('${x.n}','s')"><div class="item-header"><span class="item-name">${x.n}</span><span>$${x.p}</span></div></div>`; });
+        data.b.forEach(x => { document.getElementById('bebidas-container').innerHTML += `<div class="menu-item" onclick="abrirP('${x.n}','b')"><div class="item-header"><span class="item-name">${x.n}</span><span>$${x.p}</span></div></div>`; });
     }
 
     function abrirP(n, t) {
         seleccionado = t==='s' ? data.s.find(i=>i.n===n) : data.b.find(i=>i.n===n);
         document.getElementById('m-nombre').innerText = seleccionado.n;
-        document.getElementById('m-desc-completa').innerText = seleccionado.desc || "Bebida refrescante";
-        const ingBox = document.getElementById('m-ingredientes');
-        ingBox.innerHTML = seleccionado.ing ? seleccionado.ing.map(i => `
-            <div style="background:#1a1a1a; border:1px solid #333; padding:10px; border-radius:8px; font-size:0.7rem; display:flex; justify-content:space-between;">
-                SIN ${i} <input type="checkbox" class="q-check" value="${i}">
-            </div>`).join('') : "<p style='grid-column: 1/-1;'>Esta opción no requiere cambios.</p>";
+        document.getElementById('m-ingredientes').innerHTML = seleccionado.ing ? seleccionado.ing.map(i => `<div style="background:#1a1a1a; padding:8px; border-radius:5px; font-size:0.7rem;">SIN ${i} <input type="checkbox" class="q-check" value="${i}"></div>`).join('') : "";
         document.getElementById('modal-personalizar').style.display = 'flex';
     }
 
@@ -179,35 +138,49 @@
         carrito.push({ n: seleccionado.n, p: seleccionado.p, sin: q.join(", ") || "Nada" });
         document.getElementById('carrito-barra').style.display = 'flex';
         document.getElementById('cart-count').innerText = `ORDEN: ${carrito.length}`;
-        document.getElementById('cart-total').innerText = `$${carrito.reduce((a,b)=>a+b.p,0).toLocaleString()}`;
+        document.getElementById('cart-total').innerText = `$${carrito.reduce((a,b)=>a+b.p,0)}`;
         cerrarModales();
     }
 
     function abrirCheckout() {
-        const res = document.getElementById('resumen-lista');
-        const total = carrito.reduce((a,b)=>a+b.p,0);
-        res.innerHTML = "<strong>TU PEDIDO:</strong><br><hr>" + carrito.map(i => `• ${i.n}<br><small style='color:red;'>&nbsp;&nbsp;Sin: ${i.sin}</small><br>`).join('') + `<hr><strong>TOTAL: $${total.toLocaleString()}</strong>`;
+        document.getElementById('resumen-lista').innerHTML = carrito.map(i => `• ${i.n} (Sin: ${i.sin})<br>`).join('');
         document.getElementById('modal-checkout').style.display = 'flex';
     }
 
-    function calcularCambio() {
-        const total = carrito.reduce((a,b)=>a+b.p,0);
-        const paga = document.getElementById('c-cuanto').value || 0;
-        document.getElementById('vueltas-box').innerText = "CAMBIO: $" + (paga-total > 0 ? (paga-total).toLocaleString() : 0);
+    function cambiarMetodo() {
+        const m = document.getElementById('c-metodo').value;
+        document.getElementById('bloque-efectivo').style.display = m === 'efectivo' ? 'block' : 'none';
+        document.getElementById('btn-main').innerText = m === 'efectivo' ? 'ENVIAR PEDIDO' : 'CONFIRMAR PAGO';
     }
 
-    async function enviarPedido() {
-        const dir = document.getElementById('c-direccion').value;
-        if(!dir) return alert("Por favor, ingresa tu dirección.");
-        const total = carrito.reduce((a,b)=>a+b.p,0);
-        const paga = document.getElementById('c-cuanto').value || total;
+    function calcCambio() {
+        const t = carrito.reduce((a,b)=>a+b.p,0);
+        const p = document.getElementById('c-cuanto').value || 0;
+        document.getElementById('vueltas').innerText = "CAMBIO: $" + (p-t > 0 ? (p-t) : 0);
+    }
 
-        const pedido = { items: carrito, total, direccion: dir, pagaCon: paga, cambio: paga-total, hora: new Date().toLocaleTimeString() };
-        try {
-            await fetch(urlDB, { method: 'POST', body: JSON.stringify(pedido) });
-            alert("¡ORDEN ENVIADA A COCINA!");
-            location.reload();
-        } catch (e) { alert("Error de conexión"); }
+    function procesarPago() {
+        const nom = document.getElementById('c-nombre').value;
+        if(!nom || !document.getElementById('c-direccion').value) return alert("Completa los datos");
+        if(document.getElementById('c-metodo').value === 'electronico') {
+            document.getElementById('display-nombre').innerText = nom;
+            document.getElementById('modal-checkout').style.display = 'none';
+            document.getElementById('modal-pago-qr').style.display = 'flex';
+        } else { enviarPedido('Efectivo'); }
+    }
+
+    async function enviarPedido(m) {
+        const pedido = {
+            cliente: document.getElementById('c-nombre').value,
+            direccion: document.getElementById('c-direccion').value,
+            telefono: document.getElementById('c-telefono').value,
+            total: carrito.reduce((a,b)=>a+b.p,0),
+            metodo: m,
+            items: carrito,
+            hora: new Date().toLocaleTimeString()
+        };
+        await fetch(urlDB, { method: 'POST', body: JSON.stringify(pedido) });
+        alert("PEDIDO ENVIADO"); location.reload();
     }
 
     function cerrarModales() { document.querySelectorAll('.modal').forEach(m => m.style.display='none'); }
