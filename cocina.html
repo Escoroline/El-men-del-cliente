@@ -2,58 +2,63 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>COCINA | Clandestino</title>
+    <title>COCINA | Sándwich Clandestino</title>
     <style>
         body { background: #000; color: #fff; font-family: 'Courier New', monospace; padding: 20px; }
-        .ticket { border: 2px solid #d4af37; padding: 15px; border-radius: 10px; margin-bottom: 20px; background: #111; }
-        .header-t { padding: 10px; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; }
-        .btn-listo { width: 100%; padding: 10px; font-weight: bold; cursor: pointer; border: none; margin-top: 10px; }
+        .ticket { border: 2px solid #d4af37; padding: 15px; border-radius: 10px; margin-bottom: 20px; background: #111; position: relative; }
+        .direccion { background: #d4af37; color: black; padding: 5px 10px; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; }
+        .btn-listo { background: #d4af37; color: black; border: none; padding: 10px; font-weight: bold; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 10px; }
+        hr { border: 0; border-top: 1px dotted #444; margin: 10px 0; }
     </style>
 </head>
 <body>
     <h1 style="color:#d4af37; text-align:center;">COMANDAS CLANDESTINAS</h1>
-    <div id="panel">CARGANDO PEDIDOS...</div>
+    <div id="comandas-container">CARGANDO PEDIDOS...</div>
 
     <script>
         const urlDB = "https://sandwich-clandestinos-default-rtdb.firebaseio.com/pedidos.json";
 
-        async function cargar() {
-            const res = await fetch(urlDB);
-            const data = await res.json();
-            const container = document.getElementById('panel');
-            container.innerHTML = "";
-            if(!data) return container.innerHTML = "SIN PEDIDOS";
+        async function cargarPedidos() {
+            try {
+                const response = await fetch(urlDB);
+                const data = await response.json();
+                const container = document.getElementById('comandas-container');
+                container.innerHTML = "";
 
-            Object.keys(data).reverse().forEach(id => {
-                const p = data[id];
-                const esDig = p.metodo === 'Electrónico';
-                const color = esDig ? '#00d4ff' : '#d4af37';
+                if (!data) {
+                    container.innerHTML = "<h2 style='text-align:center; color:#555;'>ESPERANDO PEDIDOS...</h2>";
+                    return;
+                }
 
-                container.innerHTML += `
-                    <div class="ticket" style="border-color: ${color}">
-                        <div class="header-t" style="background:${color}; color:black;">
-                            📍 ${p.direccion} ${esDig ? '[PAGO DIGITAL]' : ''}
+                Object.keys(data).reverse().forEach(id => {
+                    const pedido = data[id];
+                    let itemsHtml = pedido.items.map(i => `• ${i.n} <br><small style="color:#ff4444;">&nbsp;&nbsp;Sin: ${i.sin}</small><br>`).join('');
+
+                    container.innerHTML += `
+                        <div class="ticket">
+                            <div class="direccion">📍 ${pedido.direccion}</div>
+                            <p><strong>TEL:</strong> ${pedido.telefono} | <strong>HORA:</strong> ${pedido.hora}</p>
+                            <hr>
+                            ${itemsHtml}
+                            <hr>
+                            <p><strong>TOTAL: $${pedido.total}</strong></p>
+                            <p>Paga con: $${pedido.pagaCon} | Cambio: $${pedido.cambio}</p>
+                            <button class="btn-listo" onclick="completarPedido('${id}')">✓ MARCAR COMO ENTREGADO</button>
                         </div>
-                        <p><strong>CLIENTE:</strong> ${p.cliente} | <strong>TEL:</strong> ${p.telefono}</p>
-                        <hr>
-                        ${p.items.map(i => `• ${i.n} <small>(Sin: ${i.sin})</small><br>`).join('')}
-                        <hr>
-                        <p><strong>TOTAL: $${p.total}</strong></p>
-                        <p style="color:${color}; font-weight:bold;">${esDig ? '⚠️ VERIFICAR NEQUI' : 'PAGO EN EFECTIVO'}</p>
-                        <button class="btn-listo" style="background:${color}" onclick="eliminar('${id}')">PEDIDO ENTREGADO</button>
-                    </div>`;
-            });
+                    `;
+                });
+            } catch (e) { console.error("Error cargando pedidos", e); }
         }
 
-        async function eliminar(id) {
-            if(confirm("¿Eliminar comanda?")) {
+        async function completarPedido(id) {
+            if (confirm("¿Deseas eliminar esta comanda?")) {
                 await fetch(`https://sandwich-clandestinos-default-rtdb.firebaseio.com/pedidos/${id}.json`, { method: 'DELETE' });
-                cargar();
+                cargarPedidos();
             }
         }
 
-        setInterval(cargar, 5000);
-        cargar();
+        setInterval(cargarPedidos, 5000);
+        cargarPedidos();
     </script>
 </body>
 </html>
