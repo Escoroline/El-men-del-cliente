@@ -2,76 +2,54 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>TERMINAL COCINA | Clandestino</title>
+    <title>COCINA | Clandestino</title>
     <style>
         body { background: #000; color: #fff; font-family: 'Courier New', monospace; padding: 20px; }
-        .ticket { background: #111; border: 2px solid #d4af37; padding: 20px; border-radius: 15px; margin-bottom: 20px; }
-        .direccion { background: #d4af37; color: #000; padding: 10px; font-weight: bold; }
-        .btn-notify { background: #fff; color: #000; padding: 10px; border: none; cursor: pointer; border-radius: 5px; width: 100%; margin-bottom: 20px; font-weight: bold; }
+        .ticket { border: 2px solid #d4af37; padding: 15px; border-radius: 10px; margin-bottom: 20px; background: #111; }
+        .header-t { padding: 10px; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; }
+        .btn-listo { width: 100%; padding: 10px; font-weight: bold; cursor: pointer; border: none; margin-top: 10px; }
     </style>
 </head>
 <body>
-
-    <button class="btn-notify" onclick="activarNotificaciones()">🔔 PASO 1: ACTIVAR NOTIFICACIONES CELULAR</button>
-    <h1 style="text-align:center; color:#d4af37;">PEDIDOS CLANDESTINOS</h1>
-    <div id="panel">ESPERANDO...</div>
-
-    <audio id="beep" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
+    <h1 style="color:#d4af37; text-align:center;">COMANDAS CLANDESTINAS</h1>
+    <div id="panel">CARGANDO PEDIDOS...</div>
 
     <script>
         const urlDB = "https://sandwich-clandestinos-default-rtdb.firebaseio.com/pedidos.json";
-        let ultimoPedidoID = null;
-
-        function activarNotificaciones() {
-            Notification.requestPermission().then(perm => {
-                if(perm === 'granted') alert("¡Notificaciones activadas!");
-            });
-        }
 
         async function cargar() {
             const res = await fetch(urlDB);
             const data = await res.json();
             const container = document.getElementById('panel');
             container.innerHTML = "";
+            if(!data) return container.innerHTML = "SIN PEDIDOS";
 
-            if (!data) return;
-
-            const ids = Object.keys(data);
-            const nuevoID = ids[ids.length - 1];
-
-            // SI HAY UN PEDIDO NUEVO (que no sea el último que vimos)
-            if (nuevoID !== ultimoPedidoID && ultimoPedidoID !== null) {
-                enviarNotificacion("¡NUEVO PEDIDO!", "Revisa la terminal de cocina");
-                document.getElementById('beep').play();
-            }
-            ultimoPedidoID = nuevoID;
-
-            ids.forEach(id => {
+            Object.keys(data).reverse().forEach(id => {
                 const p = data[id];
+                const esDig = p.metodo === 'Electrónico';
+                const color = esDig ? '#00d4ff' : '#d4af37';
+
                 container.innerHTML += `
-                    <div class="ticket">
-                        <div class="direccion">📍 ${p.direccion}</div>
-                        <p>HORA: ${p.hora}</p>
+                    <div class="ticket" style="border-color: ${color}">
+                        <div class="header-t" style="background:${color}; color:black;">
+                            📍 ${p.direccion} ${esDig ? '[PAGO DIGITAL]' : ''}
+                        </div>
+                        <p><strong>CLIENTE:</strong> ${p.cliente} | <strong>TEL:</strong> ${p.telefono}</p>
                         <hr>
-                        ${p.items.map(i => `• ${i.n} (Sin: ${i.sin})<br>`).join('')}
+                        ${p.items.map(i => `• ${i.n} <small>(Sin: ${i.sin})</small><br>`).join('')}
                         <hr>
-                        <strong>PAGAR: $${p.total} | CAMBIO: $${p.cambio}</strong>
-                        <button onclick="completar('${id}')" style="width:100%; margin-top:10px; padding:10px;">LISTO</button>
-                    </div>
-                `;
+                        <p><strong>TOTAL: $${p.total}</strong></p>
+                        <p style="color:${color}; font-weight:bold;">${esDig ? '⚠️ VERIFICAR NEQUI' : 'PAGO EN EFECTIVO'}</p>
+                        <button class="btn-listo" style="background:${color}" onclick="eliminar('${id}')">PEDIDO ENTREGADO</button>
+                    </div>`;
             });
         }
 
-        function enviarNotificacion(titulo, cuerpo) {
-            if (Notification.permission === 'granted') {
-                new Notification(titulo, { body: cuerpo, icon: 'https://cdn-icons-png.flaticon.com/512/651/651965.png' });
-                if (navigator.vibrate) navigator.vibrate(500); // Vibra el celular
+        async function eliminar(id) {
+            if(confirm("¿Eliminar comanda?")) {
+                await fetch(`https://sandwich-clandestinos-default-rtdb.firebaseio.com/pedidos/${id}.json`, { method: 'DELETE' });
+                cargar();
             }
-        }
-
-        async function completar(id) {
-            await fetch(`https://sandwich-clandestinos-default-rtdb.firebaseio.com/pedidos/${id}.json`, { method: 'DELETE' });
-            cargar();
         }
 
         setInterval(cargar, 5000);
